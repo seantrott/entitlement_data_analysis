@@ -1,0 +1,506 @@
+---
+title: "Entitlement Final Analysis"
+output: 
+  html_document:
+    toc: true
+---
+
+```{r include = FALSE}
+library(tidyverse)
+library(lme4)
+library(reshape)
+```
+
+
+# Experiment 1
+
+```{r}
+coded.no.filler = read.csv("../data/exp1_critical.csv")
+```
+
+
+## Experiment info
+
+```{r}
+length(unique(coded.no.filler$subject))
+table(distinct(coded.no.filler, subject, Gender)$Gender)
+mean(distinct(coded.no.filler, subject, Age)$Age)
+sd(distinct(coded.no.filler, subject, Age)$Age)
+range(distinct(coded.no.filler, subject, Age)$Age)
+```
+
+
+## Formatting ~ Entitlement
+
+```{r}
+
+
+
+model.formatting.full.situation = glmer(formatting ~ condition*situation + Gender +
+                                          (1 + condition | subject) +
+                                          (1 | stimNum), 
+                                        data = coded.no.filler, 
+                                        control=glmerControl(optimizer="bobyqa"),
+                                        family=binomial)
+model.formatting.full.situation.reduced = glmer(formatting ~ condition + situation + Gender +
+                                                  (1 + condition | subject) +
+                                                  (1 | stimNum), 
+                                                data = coded.no.filler, 
+                                                control=glmerControl(optimizer="bobyqa"),
+                                                family=binomial)
+
+model.formatting.full2 = glmer(formatting ~ situation + Gender + 
+                                 (1 + condition | subject) +
+                                 (1 | stimNum), 
+                               data = coded.no.filler, 
+                               family=binomial)
+
+model.formatting.full = glmer(formatting ~ condition + Gender +
+                                (1 + condition | subject) +
+                                (1  | stimNum), 
+                              data = coded.no.filler, 
+                              family=binomial)
+model.formatting.null = glmer(formatting ~ Gender + (1 + condition | subject) +
+                                (1 | stimNum), 
+                              data = coded.no.filler, 
+                              family=binomial)
+
+model.formatting.none= glmer(formatting ~  (1 + condition | subject) +
+                                (1 | stimNum), 
+                              data = coded.no.filler, 
+                              family=binomial)
+
+```
+
+
+```{r}
+anova(model.formatting.full.situation, model.formatting.full.situation.reduced)
+anova(model.formatting.full.situation.reduced, model.formatting.full2)
+anova(model.formatting.full.situation.reduced, model.formatting.full)
+anova(model.formatting.null, model.formatting.none)
+```
+
+
+### Exploratory analysis (institution)
+
+```{r}
+coded.no.filler$institution = fct_recode(coded.no.filler$situation,
+                                         "institution"="urgency",
+                                         "non"="relationship",
+                                         "non"="interaction")
+
+model_institution = glmer(formatting ~ condition + institution +
+                                          (1 + condition | subject) +
+                                          (1 | stimNum), 
+                                        data = coded.no.filler, 
+                                        control=glmerControl(optimizer="bobyqa"),
+                                        family=binomial)
+
+model_institution_reduced = glmer(formatting ~ condition +
+                                          (1 + condition | subject) +
+                                          (1 | stimNum), 
+                                        data = coded.no.filler, 
+                                        control=glmerControl(optimizer="bobyqa"),
+                                        family=binomial)
+```
+
+```{r}
+anova(model_institution, model_institution_reduced)
+```
+
+
+## Length ~ Entitlement
+
+```{r}
+coded.no.filler$length = nchar(as.character(coded.no.filler$responses))
+
+length_entitlement = lmer(data=coded.no.filler, length~condition + (1 + condition | subject) +
+                         (1 + condition | stimNum),
+                       REML=FALSE)
+
+
+length_entitlement_null =  lmer(data=coded.no.filler, length~ (1 + condition | subject) +
+                  (1 + condition | stimNum),
+                REML=FALSE)
+```
+
+
+```{r}
+anova(length_entitlement, length_entitlement_null)
+```
+
+## Justification ~ Entitlement
+
+
+```{r}
+
+model_reason_full = glmer(factor(Just1.ST) ~ condition + Gender +
+                          (1 + condition | subject) +
+                          (1 + condition | stimNum),
+                        data = coded.no.filler, 
+                        family=binomial)
+
+model_reason_reduced = glmer(factor(Just1.ST) ~ Gender + (1 + condition | subject) +
+                          (1 + condition | stimNum), 
+                        data = coded.no.filler, 
+                        family=binomial) 
+
+model_repay_full = glmer(factor(Just2.ST) ~ condition + Gender +
+                          (1 | subject) +
+                          (1 + condition | stimNum),
+                        data = coded.no.filler, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_repay_reduced = glmer(factor(Just2.ST) ~ Gender + (1 | subject) +
+                          (1 + condition | stimNum), 
+                        data = coded.no.filler, 
+                         control=glmerControl(optimizer="bobyqa"),
+                        family=binomial) 
+
+```
+
+
+```{r}
+anova(model_reason_full, model_reason_reduced)
+anova(model_repay_full, model_repay_reduced)
+
+```
+
+## Contingencies ~ Entitlement
+
+
+```{r}
+
+model_contingencies_full = glmer(factor(Contingencies2.ST) ~ condition + Gender + 
+                          (1 | subject) +
+                          (1 + condition | stimNum),
+                        data = coded.no.filler, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_contingencies_reduced = glmer(factor(Contingencies2.ST) ~ Gender + (1 | subject) +
+                          (1 + condition | stimNum), 
+                        data = coded.no.filler, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial) 
+
+
+```
+
+
+```{r}
+anova(model_contingencies_full, model_contingencies_reduced)
+
+```
+
+
+# Experiment 1b
+
+
+
+```{r}
+
+coded.no.filler = read.csv("../data/exp1b_critical.csv")
+```
+
+
+## Experiment info
+
+```{r}
+length(unique(coded.no.filler$subject))
+table(distinct(coded.no.filler, subject, Gender)$Gender)
+mean(distinct(coded.no.filler, subject, Age)$Age)
+sd(distinct(coded.no.filler, subject, Age)$Age)
+range(distinct(coded.no.filler, subject, Age)$Age)
+```
+
+
+## Formatting ~ Entitlement
+
+```{r}
+
+model.formatting.full.situation = glmer(formatting ~ condition*situation + Gender +
+                                          (1 + condition | subject) +
+                                          (1 | stimNum), 
+                                        data = coded.no.filler, 
+                                        control=glmerControl(optimizer="bobyqa"),
+                                        family=binomial)
+model.formatting.full.situation.reduced = glmer(formatting ~ condition + situation + Gender +
+                                                  (1 + condition | subject) +
+                                                  (1 | stimNum), 
+                                                data = coded.no.filler, 
+                                                control=glmerControl(optimizer="bobyqa"),
+                                                family=binomial)
+
+model.formatting.full2 = glmer(formatting ~ situation + Gender + 
+                                 (1 + condition | subject) +
+                                 (1 | stimNum), 
+                               data = coded.no.filler, 
+                               family=binomial)
+
+model.formatting.full = glmer(formatting ~ condition + Gender +
+                                (1 + condition | subject) +
+                                (1  | stimNum), 
+                              data = coded.no.filler, 
+                              family=binomial)
+model.formatting.null = glmer(formatting ~ Gender + (1 + condition | subject) +
+                                (1 | stimNum), 
+                              data = coded.no.filler, 
+                              family=binomial)
+
+model.formatting.none= glmer(formatting ~  (1 + condition | subject) +
+                                (1 | stimNum), 
+                              data = coded.no.filler, 
+                              family=binomial)
+```
+
+
+
+
+```{r}
+anova(model.formatting.full.situation, model.formatting.full.situation.reduced)
+anova(model.formatting.full.situation.reduced, model.formatting.full2)
+anova(model.formatting.full.situation.reduced, model.formatting.full)
+anova(model.formatting.null, model.formatting.none)
+```
+
+
+
+## Length ~ Entitlement
+
+```{r}
+coded.no.filler$length = nchar(as.character(coded.no.filler$responses))
+
+length_entitlement = lmer(data=coded.no.filler, length~condition + Gender + (1 + condition | subject) +
+                         (1 + condition | stimNum),
+                       REML=FALSE)
+
+
+length_entitlement_null =  lmer(data=coded.no.filler, length ~ Gender + (1  + condition | subject) +
+                  (1 + condition | stimNum),
+                REML=FALSE)
+```
+
+
+```{r}
+anova(length_entitlement, length_entitlement_null)
+```
+
+
+## Justification ~ Entitlement
+
+
+```{r}
+
+model_reason_full = glmer(factor(Reason2) ~ condition + Gender +
+                          (1 + condition | subject) +
+                          (1 + condition | stimNum),
+                        data = coded.no.filler, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_reason_reduced = glmer(factor(Reason2) ~ Gender +(1 + condition | subject) +
+                          (1 + condition | stimNum), 
+                        data = coded.no.filler, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial) 
+
+model_repay_full = glmer(factor(Repayment2) ~ condition + Gender +
+                          (1 | subject) +
+                          (1 + condition | stimNum),
+                        control=glmerControl(optimizer="bobyqa"),
+                        data = coded.no.filler, 
+                        family=binomial)
+
+model_repay_reduced = glmer(factor(Repayment2) ~ Gender +(1 | subject) +
+                          (1 + condition | stimNum), 
+                        data = coded.no.filler, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial) 
+
+```
+
+
+```{r}
+anova(model_reason_full, model_reason_reduced)
+anova(model_repay_full, model_repay_reduced)
+
+```
+
+## Contingencies ~ Entitlement
+
+
+```{r}
+
+model_contingencies_full = glmer(factor(Conts) ~ condition + 
+                          (1 | subject) +
+                          (1 + condition | stimNum),
+                        data = coded.no.filler, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_contingencies_reduced = glmer(factor(Conts) ~ (1 | subject) +
+                          (1 + condition | stimNum), 
+                        data = coded.no.filler, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial) 
+
+
+```
+
+
+```{r}
+anova(model_contingencies_full, model_contingencies_reduced)
+
+```
+
+
+
+# Experiment 2
+
+```{r}
+coded.no.filler = read.csv("../data/exp2_critical.csv")
+
+```
+
+
+## Experiment info
+
+```{r}
+length(unique(coded.no.filler$subject))
+table(distinct(coded.no.filler, subject, Gender)$Gender)
+mean(distinct(coded.no.filler, subject, Age)$Age)
+sd(distinct(coded.no.filler, subject, Age)$Age)
+range(distinct(coded.no.filler, subject, Age)$Age)
+```
+
+## Formatting ~ Entitlement
+
+```{r}
+
+coded.no.filler$institution = fct_recode(coded.no.filler$situation,
+                                         non_institutional = "urgency",
+                                         non_institutional = "relationship",
+                                         non_institutional = "interaction")
+
+model.formatting.full.situation = glmer(formatting ~ condition*situation + Gender +
+                                          (1 + condition | subject) +
+                                          (1 + condition | stimNum), 
+                                        data = coded.no.filler, 
+                                        control=glmerControl(optimizer="bobyqa"),
+                                        family=binomial)
+model.formatting.full.situation.reduced = glmer(formatting ~ condition + situation + Gender +
+                                                  (1 + condition | subject) +
+                                                  (1 + condition | stimNum), 
+                                                data = coded.no.filler, 
+                                                control=glmerControl(optimizer="bobyqa"),
+                                                family=binomial)
+
+model.formatting.full2 = glmer(formatting ~ situation + Gender + 
+                                 (1 + condition | subject) +
+                                 (1 + condition | stimNum), 
+                               data = coded.no.filler, 
+                               control=glmerControl(optimizer="bobyqa"),
+                               family=binomial)
+
+model.formatting.full = glmer(formatting ~ condition + Gender +
+                                (1 + condition | subject) +
+                                (1 + condition | stimNum), 
+                              data = coded.no.filler, 
+                              control=glmerControl(optimizer="bobyqa"),
+                              family=binomial)
+model.formatting.null = glmer(formatting ~ Gender + (1 + condition | subject) +
+                                (1 + condition | stimNum), 
+                              data = coded.no.filler, 
+                              control=glmerControl(optimizer="bobyqa"),
+                              family=binomial)
+
+model.formatting.none= glmer(formatting ~  (1 + condition | subject) +
+                                (1 + condition | stimNum), 
+                              data = coded.no.filler, 
+                             control=glmerControl(optimizer="bobyqa"),
+                              family=binomial)
+```
+
+
+
+
+```{r}
+anova(model.formatting.full.situation, model.formatting.full.situation.reduced)
+anova(model.formatting.full.situation.reduced, model.formatting.full2)
+anova(model.formatting.full.situation.reduced, model.formatting.full)
+anova(model.formatting.null, model.formatting.none)
+```
+
+# Experiment 3
+
+```{r}
+coded.no.filler = read.csv("../data/exp3_critical.csv")
+
+```
+
+## Experiment info
+
+```{r}
+length(unique(coded.no.filler$subject))
+table(distinct(coded.no.filler, subject, Gender)$Gender)
+mean(distinct(coded.no.filler, subject, Age)$Age, na.rm=TRUE)
+sd(distinct(coded.no.filler, subject, Age)$Age, na.rm=TRUE)
+range(distinct(coded.no.filler, subject, Age)$Age, na.rm=TRUE)
+```
+
+## Appropriateness ~ Entitlement * Formatting
+
+```{r}
+model.formatting.entitlement.full = lmer(judgment ~ formatting*condition + Gender +
+                                           (1+condition| subject) + (1 +condition| stimNum) +
+                                           (1 | group),
+                                         data = coded.no.filler,
+                                         control=lmerControl(optimizer="bobyqa"),
+                                         REML=FALSE)
+
+
+model.formatting.entitlement.reduced = lmer(judgment ~ formatting+condition + Gender +
+                                              (1+condition| subject) + (1 + condition | stimNum) +
+                                              (1 | group),
+                                            data = coded.no.filler,
+                                            control=lmerControl(optimizer="bobyqa"),
+                                            REML=FALSE)
+
+model.formatting.just.entitlement = lmer(judgment ~ condition + Gender +
+                                           (1+condition| subject) + (1 + condition | stimNum) +
+                                           (1 | group),
+                                         data = coded.no.filler,
+                                         control=lmerControl(optimizer="bobyqa"),
+                                         REML=FALSE)
+
+model.formatting.just.formatting = lmer(judgment ~ formatting + Gender +
+                                          (1+condition| subject) + (1 + condition | stimNum) +
+                                          (1 | group),
+                                        data = coded.no.filler,
+                                        control=lmerControl(optimizer="bobyqa"),
+                                        REML=FALSE)
+model.formatting.just.null = lmer(judgment ~ Gender + (1+condition| subject) + (1 + condition | stimNum) +
+                                    (1 | group),
+                                  data = coded.no.filler,
+                                  control=lmerControl(optimizer="bobyqa"),
+                                  REML=FALSE)
+model.formatting.none = lmer(judgment ~  (1+condition| subject) + (1 + condition | stimNum) +
+                                    (1 | group),
+                                  data = coded.no.filler,
+                                  control=lmerControl(optimizer="bobyqa"),
+                                  REML=FALSE)
+```
+
+
+```{r}
+anova(model.formatting.entitlement.full, model.formatting.entitlement.reduced)
+anova(model.formatting.entitlement.reduced, model.formatting.just.formatting)
+anova(model.formatting.entitlement.reduced, model.formatting.just.entitlement)
+anova(model.formatting.just.entitlement, model.formatting.just.null)
+anova(model.formatting.just.formatting, model.formatting.just.null)
+anova(model.formatting.just.null, model.formatting.none)
+
+```
+
