@@ -1,2 +1,3 @@
-# entitlement_data_analysis
-Data and analysis scripts for entitlement project.
+# Entitlement data analysis
+
+This repository contains the critical data and scripts to replicate the analysis in Trott & Rossano (Submitted).
