@@ -9,97 +9,366 @@ output:
 library(tidyverse)
 library(lme4)
 library(reshape)
+library(psych)
+library(Hmisc)
+library(lmerTest)
+library(nnet)
+library(broom)
+```
+
+
+```{r}
+# setwd("/Users/seantrott/Dropbox/UCSD/Research/IndirectSpeechActs/Entitlement/entitlement_data_analysis/analysis")
+```
+
+
+
+# Norm information
+
+
+
+```{r}
+df_normed = read_csv("../data/norming_data.csv")
+df_normed$Age = as.integer(df_normed$Age)
+df_normed$condition = factor(df_normed$stimType)
+df_normed$situation = factor(df_normed$type)
+```
+
+## Experiment info
+
+```{r}
+length(unique(df_normed$subject))
+table(distinct(df_normed, subject, Gender)$Gender)
+mean(distinct(df_normed, subject, Age)$Age, na.rm=TRUE)
+sd(distinct(df_normed, subject, Age)$Age, na.rm=TRUE)
+range(distinct(df_normed, subject, Age)$Age, na.rm=TRUE)
+
+```
+
+## Average completion time
+
+```{r}
+df_rt = df_normed %>%
+  group_by(subject) %>%
+  summarise(total_minutes = sum(rt) / 60000)
+
+mean(df_rt$total_minutes)
+```
+
+
+
+## Inter-correlations
+
+```{r}
+cor_table = df_normed %>%
+  select(entitlement_norm, power_norm, imposition_norm, distance_norm) %>%
+  na.omit() %>%
+  as.matrix() %>%
+  rcorr(type=c("pearson"))
+
+cor_table
+```
+
+
+## Descriptive stats
+
+```{r}
+df_normed %>%
+  group_by(stimType) %>%
+  summarise(mean_entitlement = mean(entitlement_norm, na.rm=TRUE),
+            sd_entitlement = sd(entitlement_norm, na.rm=TRUE),
+            mean_imposition = mean(imposition_norm, na.rm=TRUE),
+            sd_imposition = sd(imposition_norm, na.rm=TRUE),
+            mean_power = mean(power_norm, na.rm=TRUE),
+            sd_power = sd(power_norm, na.rm=TRUE),
+            mean_distance = mean(distance_norm, na.rm=TRUE),
+            sd_distance = sd(distance_norm, na.rm=TRUE)
+            )
+
+
+summary(lm(data = df_normed,
+           entitlement_norm ~ stimType))
+summary(lm(data = df_normed,
+           imposition_norm ~ stimType))
+summary(lm(data = df_normed,
+           power_norm ~ stimType))
+summary(lm(data = df_normed,
+           distance_norm ~ stimType))
+
+
+df_normed %>%
+  group_by(stimNum, stimType) %>%
+  summarise(mean_entitlement = mean(entitlement_norm, na.rm=TRUE),
+            sd_entitlement = sd(entitlement_norm, na.rm=TRUE),
+            mean_imposition = mean(imposition_norm, na.rm=TRUE),
+            sd_imposition = sd(imposition_norm, na.rm=TRUE),
+            mean_power = mean(power_norm, na.rm=TRUE),
+            sd_power = sd(power_norm, na.rm=TRUE),
+            mean_distance = mean(distance_norm, na.rm=TRUE),
+            sd_distance = sd(distance_norm, na.rm=TRUE)
+            )
+
+```
+
+
+```{r}
+
+m1_entitlement = lm(data = df_normed,
+          entitlement_norm ~ condition * situation + Gender)
+summary(m1_entitlement)
+
+
+m1_power = lm(data = df_normed,
+          power_norm ~ condition * situation)
+summary(m1_power)
+
+
+m1_imposition = lm(data = df_normed,
+          imposition_norm ~ condition * situation)
+summary(m1_imposition)
+
+m1_distance = lm(data = df_normed,
+          distance_norm ~ condition * situation)
+summary(m1_distance)
 ```
 
 
 # Experiment 1
 
 ```{r}
-coded.no.filler = read.csv("../data/exp1_critical.csv")
+
+coded_with_norms = read_csv("../data/exp1_critical.csv")
+coded_with_norms$formatting = factor(coded_with_norms$formatting)
+
+```
+
+
+## Average completion time
+
+```{r}
+df_rt = coded_with_norms %>%
+  group_by(subject) %>%
+  summarise(total_minutes = sum(rt) / 60000)
+
+mean(df_rt$total_minutes)
+```
+
+
+## Inter-rater reliability
+
+
+```{r}
+coded.reduced = coded_with_norms %>%
+  filter(Code.SB != "-") %>%
+  filter(Code.SB != "O") %>%
+  filter(Code.SB != "")
+
+nrow(coded.reduced)
+nrow(coded.reduced) / nrow(coded_with_norms)
+```
+
+
+### Formatting
+
+```{r}
+coded.reduced$Code.SB = factor(coded.reduced$Code.SB, levels=c("D", "IS", "M", "EM"))
+coded.reduced$Code.ST = factor(coded.reduced$Code.ST, levels=c("D", "IS", "M", "EM"))
+coded.reduced$agree = coded.reduced$Code.SB == coded.reduced$Code.ST
+mean(coded.reduced$agree)
+
+formatting_bound = cbind(coded.reduced$Code.SB, coded.reduced$Code.ST)
+formatting_kappa = cohen.kappa(formatting_bound)
+formatting_kappa
+```
+
+### Reason
+
+```{r}
+coded.reduced$agree_reason = coded.reduced$Reason.SB == coded.reduced$Just1.ST
+mean(coded.reduced$agree_reason)
+
+preface_bound = cbind(coded.reduced$Reason.SB, coded.reduced$Just1.ST)
+preface_kappa = cohen.kappa(preface_bound)
+preface_kappa
+```
+
+
+#### Set reason to JV's codes if disagreement
+
+```{r}
+coded_with_norms$reason_final = ifelse(coded_with_norms$Reason.JV %in% c(0, 1), 
+                                       coded_with_norms$Reason.JV,
+                                       coded_with_norms$Just1.ST)
+```
+
+
+
+
+### Repay
+
+```{r}
+coded.reduced$agree_repay = coded.reduced$Repayment.SB == coded.reduced$Just2.ST
+mean(coded.reduced$agree_repay)
+
+preface_bound = cbind(coded.reduced$Repayment.SB, coded.reduced$Just2.ST)
+preface_kappa = cohen.kappa(preface_bound)
+preface_kappa
 ```
 
 
 ## Experiment info
 
 ```{r}
-length(unique(coded.no.filler$subject))
-table(distinct(coded.no.filler, subject, Gender)$Gender)
-mean(distinct(coded.no.filler, subject, Age)$Age)
-sd(distinct(coded.no.filler, subject, Age)$Age)
-range(distinct(coded.no.filler, subject, Age)$Age)
-```
+length(unique(coded_with_norms$subject))
+table(distinct(coded_with_norms, subject, Gender)$Gender)
+mean(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
+sd(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
+range(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
 
+```
 
 ## Formatting ~ Entitlement
 
 ```{r}
+model_full = glmer(data = coded_with_norms,
+                  formatting ~ condition + Gender+
+                    (1 + condition | subject) + (1 + condition | stimNum),
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
 
+model_reduced = glmer(data = coded_with_norms,
+                  formatting ~ Gender+
+                    (1 + condition | subject) + (1 + condition | stimNum),
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
 
-
-model.formatting.full.situation = glmer(formatting ~ condition*situation + Gender +
-                                          (1 + condition | subject) +
-                                          (1 | stimNum), 
-                                        data = coded.no.filler, 
-                                        control=glmerControl(optimizer="bobyqa"),
-                                        family=binomial)
-model.formatting.full.situation.reduced = glmer(formatting ~ condition + situation + Gender +
-                                                  (1 + condition | subject) +
-                                                  (1 | stimNum), 
-                                                data = coded.no.filler, 
-                                                control=glmerControl(optimizer="bobyqa"),
-                                                family=binomial)
-
-model.formatting.full2 = glmer(formatting ~ situation + Gender + 
-                                 (1 + condition | subject) +
-                                 (1 | stimNum), 
-                               data = coded.no.filler, 
-                               family=binomial)
-
-model.formatting.full = glmer(formatting ~ condition + Gender +
-                                (1 + condition | subject) +
-                                (1  | stimNum), 
-                              data = coded.no.filler, 
-                              family=binomial)
-model.formatting.null = glmer(formatting ~ Gender + (1 + condition | subject) +
-                                (1 | stimNum), 
-                              data = coded.no.filler, 
-                              family=binomial)
-
-model.formatting.none= glmer(formatting ~  (1 + condition | subject) +
-                                (1 | stimNum), 
-                              data = coded.no.filler, 
-                              family=binomial)
+anova(model_full, model_reduced)
 
 ```
 
 
+## Formatting ~ Entitlement Norms
+
+
 ```{r}
-anova(model.formatting.full.situation, model.formatting.full.situation.reduced)
-anova(model.formatting.full.situation.reduced, model.formatting.full2)
-anova(model.formatting.full.situation.reduced, model.formatting.full)
-anova(model.formatting.null, model.formatting.none)
+
+model_formatting_full = glmer(formatting ~ mean_entitlement +
+                              mean_power +
+                              mean_imposition +
+                              mean_distance +
+                              Gender + 
+                          (1 + mean_entitlement | subject) +
+                          (1 | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_formatting_no_entitlement = glmer(formatting ~  mean_power +
+                                   mean_imposition +
+                                   mean_distance +
+                                   Gender + 
+                          (1 + mean_entitlement | subject) +
+                          (1 | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_formatting_no_power = glmer(formatting ~  mean_entitlement +
+                                   mean_imposition +
+                                   mean_distance +
+                                   Gender + 
+                          (1 + mean_entitlement | subject) +
+                          (1 | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_formatting_no_imposition = glmer(formatting ~  mean_power +
+                                   mean_entitlement +
+                                   mean_distance +
+                                   Gender + 
+                          (1 + mean_entitlement | subject) +
+                          (1 | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_formatting_no_distance = glmer(formatting ~  mean_power +
+                                   mean_imposition +
+                                   mean_entitlement +
+                                   Gender + 
+                          (1 + mean_entitlement | subject) +
+                          (1 | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+anova(model_formatting_full, model_formatting_no_entitlement)
+anova(model_formatting_full, model_formatting_no_power)
+anova(model_formatting_full, model_formatting_no_imposition)
+anova(model_formatting_full, model_formatting_no_distance)
+```
+
+### Adjust for multiple comparisons
+
+```{r}
+p1 = anova(model_formatting_full, model_formatting_no_entitlement)$`Pr(>Chisq)`[2]
+p2 = anova(model_formatting_full, model_formatting_no_power)$`Pr(>Chisq)`[2]
+p3 = anova(model_formatting_full, model_formatting_no_imposition)$`Pr(>Chisq)`[2]
+p4 = anova(model_formatting_full, model_formatting_no_distance)$`Pr(>Chisq)`[2]
+
+p.adjust(c(p1, p2, p3, p4), method="holm")
+```
+
+```{r}
+summary(model_formatting_full)
+```
+
+### Use multinomial regression to extract weights
+
+```{r}
+model_formatting_full = multinom(formatting ~ mean_entitlement +
+                              mean_power +
+                              mean_imposition +
+                              mean_distance +
+                              Gender,
+                        data = coded_with_norms)
+
+z <- summary(model_formatting_full)$coefficients/summary(model_formatting_full)$standard.errors
+# 2-tailed Wald z tests to test significance of coefficients
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+
+summary(model_formatting_full)
+p
+
+
 ```
 
 
 ### Exploratory analysis (institution)
 
+[ Redo with entitlement norms ]
+
 ```{r}
-coded.no.filler$institution = fct_recode(coded.no.filler$situation,
+coded_with_norms$institution = fct_recode(coded_with_norms$situation,
                                          "institution"="urgency",
                                          "non"="relationship",
                                          "non"="interaction")
 
-model_institution = glmer(formatting ~ condition + institution +
-                                          (1 + condition | subject) +
+model_institution = glmer(formatting ~ mean_entitlement + institution +
+                            mean_power + mean_distance + mean_imposition + 
+                                          (1 + mean_entitlement | subject) +
                                           (1 | stimNum), 
-                                        data = coded.no.filler, 
+                                        data = coded_with_norms, 
                                         control=glmerControl(optimizer="bobyqa"),
                                         family=binomial)
 
-model_institution_reduced = glmer(formatting ~ condition +
-                                          (1 + condition | subject) +
+
+model_institution_reduced = glmer(formatting ~ mean_entitlement +
+                            mean_power + mean_distance + mean_imposition + 
+                                          (1 + mean_entitlement | subject) +
                                           (1 | stimNum), 
-                                        data = coded.no.filler, 
+                                        data = coded_with_norms, 
                                         control=glmerControl(optimizer="bobyqa"),
                                         family=binomial)
 ```
@@ -109,398 +378,1008 @@ anova(model_institution, model_institution_reduced)
 ```
 
 
-## Length ~ Entitlement
-
-```{r}
-coded.no.filler$length = nchar(as.character(coded.no.filler$responses))
-
-length_entitlement = lmer(data=coded.no.filler, length~condition + (1 + condition | subject) +
-                         (1 + condition | stimNum),
-                       REML=FALSE)
-
-
-length_entitlement_null =  lmer(data=coded.no.filler, length~ (1 + condition | subject) +
-                  (1 + condition | stimNum),
-                REML=FALSE)
-```
-
-
-```{r}
-anova(length_entitlement, length_entitlement_null)
-```
-
 ## Justification ~ Entitlement
 
 
+### Reason
+
 ```{r}
 
-model_reason_full = glmer(factor(Just1.ST) ~ condition + Gender +
+
+model_reason_full = glmer(factor(reason_final) ~ condition +
+                                   Gender + 
                           (1 + condition | subject) +
                           (1 + condition | stimNum),
-                        data = coded.no.filler, 
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
                         family=binomial)
 
-model_reason_reduced = glmer(factor(Just1.ST) ~ Gender + (1 + condition | subject) +
-                          (1 + condition | stimNum), 
-                        data = coded.no.filler, 
-                        family=binomial) 
+model_reason_no_entitlement = glmer(factor(reason_final) ~ Gender +
+                          (1 + condition | subject) +
+                          (1 + condition | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
 
-model_repay_full = glmer(factor(Just2.ST) ~ condition + Gender +
+anova(model_reason_full, model_reason_no_entitlement)
+
+
+```
+
+
+### Repay
+
+```{r}
+model_repay_full = glmer(factor(Just2.ST) ~ condition +
+                                   Gender + 
                           (1 | subject) +
                           (1 + condition | stimNum),
-                        data = coded.no.filler, 
+                        data = coded_with_norms, 
                         control=glmerControl(optimizer="bobyqa"),
                         family=binomial)
 
-model_repay_reduced = glmer(factor(Just2.ST) ~ Gender + (1 | subject) +
-                          (1 + condition | stimNum), 
-                        data = coded.no.filler, 
-                         control=glmerControl(optimizer="bobyqa"),
-                        family=binomial) 
-
-```
-
-
-```{r}
-anova(model_reason_full, model_reason_reduced)
-anova(model_repay_full, model_repay_reduced)
-
-```
-
-## Contingencies ~ Entitlement
-
-
-```{r}
-
-model_contingencies_full = glmer(factor(Contingencies2.ST) ~ condition + Gender + 
+model_repay_no_entitlement = glmer(factor(Just2.ST) ~ Gender +
                           (1 | subject) +
                           (1 + condition | stimNum),
-                        data = coded.no.filler, 
+                        data = coded_with_norms, 
                         control=glmerControl(optimizer="bobyqa"),
                         family=binomial)
 
-model_contingencies_reduced = glmer(factor(Contingencies2.ST) ~ Gender + (1 | subject) +
-                          (1 + condition | stimNum), 
-                        data = coded.no.filler, 
+anova(model_repay_full, model_repay_no_entitlement)
+```
+
+
+## Justification ~ Entitlement Norms
+
+### Reason
+
+#### Actual models
+
+```{r}
+
+
+model_reason_full = glmer(factor(reason_final) ~ mean_entitlement +
+                                   mean_power +
+                                   mean_imposition +
+                                   mean_distance +
+                            Gender +
+                          (1 + mean_entitlement | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
                         control=glmerControl(optimizer="bobyqa"),
-                        family=binomial) 
+                        family=binomial)
 
+model_reason_no_entitlement = glmer(factor(reason_final) ~  mean_power +
+                                   mean_imposition +
+                                   mean_distance +
+                                     Gender +
+                          (1 + mean_entitlement  | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
 
+model_reason_no_power = glmer(factor(reason_final) ~  mean_entitlement +
+                                   mean_imposition +
+                                   mean_distance +
+                                Gender +
+                          (1 + mean_entitlement | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_reason_no_imposition = glmer(factor(reason_final) ~  mean_power +
+                                   mean_entitlement +
+                                   mean_distance +
+                                     Gender +
+                          (1 + mean_entitlement | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_reason_no_distance = glmer(factor(reason_final) ~  mean_power +
+                                   mean_imposition +
+                                   mean_entitlement +
+                                   Gender +
+                          (1 + mean_entitlement  | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+anova(model_reason_full, model_reason_no_entitlement)
+anova(model_reason_full, model_reason_no_power)
+anova(model_reason_full, model_reason_no_imposition)
+anova(model_reason_full, model_reason_no_distance)
+
+```
+
+#### Adjust for multiple comparisons
+
+```{r}
+p1 = anova(model_reason_full, model_reason_no_entitlement)$`Pr(>Chisq)`[2]
+p2 = anova(model_reason_full, model_reason_no_power)$`Pr(>Chisq)`[2]
+p3 = anova(model_reason_full, model_reason_no_imposition)$`Pr(>Chisq)`[2]
+p4 = anova(model_reason_full, model_reason_no_distance)$`Pr(>Chisq)`[2]
+
+p.adjust(c(p1, p2, p3, p4), method="holm")
 ```
 
 
 ```{r}
-anova(model_contingencies_full, model_contingencies_reduced)
+summary(model_reason_full)
+```
 
+
+### Repay
+
+```{r}
+model_repay_full = glmer(factor(Just2.ST) ~ mean_entitlement +
+                                   mean_power +
+                                   mean_imposition +
+                                   mean_distance +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_repay_no_entitlement = glmer(factor(Just2.ST) ~  mean_power +
+                                   mean_imposition +
+                                   mean_distance +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_repay_no_power = glmer(factor(Just2.ST) ~  mean_entitlement +
+                                   mean_imposition +
+                                   mean_distance +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_repay_no_imposition = glmer(factor(Just2.ST) ~  mean_power +
+                                   mean_entitlement +
+                                   mean_distance +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_repay_no_distance = glmer(factor(Just2.ST) ~  mean_power +
+                                   mean_imposition +
+                                   mean_entitlement +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+anova(model_repay_full, model_repay_no_entitlement)
+anova(model_repay_full, model_repay_no_power)
+anova(model_repay_full, model_repay_no_imposition)
+anova(model_repay_full, model_repay_no_distance)
+```
+
+#### Adjust for multiple comparisons
+
+```{r}
+p1 = anova(model_repay_full, model_repay_no_entitlement)$`Pr(>Chisq)`[2]
+p2 = anova(model_repay_full, model_repay_no_power)$`Pr(>Chisq)`[2]
+p3 = anova(model_repay_full, model_repay_no_imposition)$`Pr(>Chisq)`[2]
+p4 = anova(model_repay_full, model_repay_no_distance)$`Pr(>Chisq)`[2]
+
+p.adjust(c(p1, p2, p3, p4), method="holm")
+```
+
+```{r}
+summary(model_repay_full)
+```
+
+
+### Descriptive
+
+```{r}
+mean(coded_with_norms$reason_final)
+mean(coded_with_norms$Just2.ST)
 ```
 
 
 # Experiment 1b
 
+```{r}
+coded_with_norms = read.csv("../data/exp1b_critical.csv")
 
+coded_with_norms$formatting = fct_recode(coded_with_norms$formatting,
+                                         "EM" = "W")
+```
+
+
+## Average completion time
 
 ```{r}
+df_rt = coded_with_norms %>%
+  group_by(subject) %>%
+  summarise(total_minutes = sum(rt) / 60000)
 
-coded.no.filler = read.csv("../data/exp1b_critical.csv")
+mean(df_rt$total_minutes)
 ```
 
 
 ## Experiment info
 
 ```{r}
-length(unique(coded.no.filler$subject))
-table(distinct(coded.no.filler, subject, Gender)$Gender)
-mean(distinct(coded.no.filler, subject, Age)$Age)
-sd(distinct(coded.no.filler, subject, Age)$Age)
-range(distinct(coded.no.filler, subject, Age)$Age)
+length(unique(coded_with_norms$subject))
+table(distinct(coded_with_norms, subject, Gender)$Gender)
+mean(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
+sd(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
+range(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
+```
+
+## Inter-rater reliability
+
+```{r}
+coded.reduced = coded_with_norms %>%
+  filter(Code.SB != "-") %>%
+  filter(Code.SB != "O") %>%
+  filter(Code.SB != "")
+
+nrow(coded.reduced)
+nrow(coded.reduced) / nrow(coded_with_norms)
+```
+
+
+### Formatting
+
+
+```{r}
+coded.reduced$Code.SB = factor(coded.reduced$Code.SB, levels=c("D", "IS", "M", "EM"))
+coded.reduced$formatting = factor(coded.reduced$formatting, levels=c("D", "IS", "M", "EM"))
+coded.reduced$agree = coded.reduced$Code.SB == coded.reduced$formatting
+mean(coded.reduced$agree)
+
+formatting_bound = cbind(coded.reduced$Code.SB, coded.reduced$formatting)
+formatting_kappa = cohen.kappa(formatting_bound)
+formatting_kappa
+```
+
+### Reason
+
+```{r}
+coded.reduced$agree_reason = coded.reduced$Reason.SB == coded.reduced$Reason2
+mean(coded.reduced$agree_reason)
+
+preface_bound = cbind(coded.reduced$Reason.SB, coded.reduced$Reason2)
+preface_kappa = cohen.kappa(preface_bound)
+preface_kappa
+```
+
+### Repay
+
+```{r}
+coded.reduced$agree_repay = coded.reduced$Repayment.SB == coded.reduced$Repayment2
+mean(coded.reduced$agree_repay, na.rm=TRUE)
+
+preface_bound = cbind(coded.reduced$Repayment.SB, coded.reduced$Repayment2)
+preface_kappa = cohen.kappa(preface_bound)
+preface_kappa
 ```
 
 
 ## Formatting ~ Entitlement
 
 ```{r}
+model_full = glmer(data = coded_with_norms,
+                  formatting ~ condition + Gender+
+                    (1 + condition | subject) + (1 + condition | stimNum),
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
 
-model.formatting.full.situation = glmer(formatting ~ condition*situation + Gender +
-                                          (1 + condition | subject) +
-                                          (1 | stimNum), 
-                                        data = coded.no.filler, 
-                                        control=glmerControl(optimizer="bobyqa"),
-                                        family=binomial)
-model.formatting.full.situation.reduced = glmer(formatting ~ condition + situation + Gender +
-                                                  (1 + condition | subject) +
-                                                  (1 | stimNum), 
-                                                data = coded.no.filler, 
-                                                control=glmerControl(optimizer="bobyqa"),
-                                                family=binomial)
+model_reduced = glmer(data = coded_with_norms,
+                  formatting ~ Gender+
+                    (1 + condition | subject) + (1 + condition | stimNum),
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
 
-model.formatting.full2 = glmer(formatting ~ situation + Gender + 
-                                 (1 + condition | subject) +
-                                 (1 | stimNum), 
-                               data = coded.no.filler, 
-                               family=binomial)
+anova(model_full, model_reduced)
 
-model.formatting.full = glmer(formatting ~ condition + Gender +
-                                (1 + condition | subject) +
-                                (1  | stimNum), 
-                              data = coded.no.filler, 
-                              family=binomial)
-model.formatting.null = glmer(formatting ~ Gender + (1 + condition | subject) +
-                                (1 | stimNum), 
-                              data = coded.no.filler, 
-                              family=binomial)
-
-model.formatting.none= glmer(formatting ~  (1 + condition | subject) +
-                                (1 | stimNum), 
-                              data = coded.no.filler, 
-                              family=binomial)
 ```
 
 
 
+## Formatting ~ Entitlement Norms
 
 ```{r}
-anova(model.formatting.full.situation, model.formatting.full.situation.reduced)
-anova(model.formatting.full.situation.reduced, model.formatting.full2)
-anova(model.formatting.full.situation.reduced, model.formatting.full)
-anova(model.formatting.null, model.formatting.none)
+model_formatting_full = glmer(formatting ~ mean_entitlement +
+                                   mean_power +
+                                   mean_imposition +
+                                   mean_distance +
+                                   Gender + 
+                          (1 + mean_entitlement | subject) +
+                          (1 | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_formatting_no_entitlement = glmer(formatting ~  mean_power +
+                                   mean_imposition +
+                                   mean_distance +
+                                   Gender + 
+                          (1 + mean_entitlement | subject) +
+                          (1 | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_formatting_no_power = glmer(formatting ~  mean_entitlement +
+                                   mean_imposition +
+                                   mean_distance +
+                                   Gender + 
+                          (1 + mean_entitlement | subject) +
+                          (1 | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_formatting_no_imposition = glmer(formatting ~  mean_power +
+                                   mean_entitlement +
+                                   mean_distance +
+                                   Gender + 
+                          (1 + mean_entitlement | subject) +
+                          (1 | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_formatting_no_distance = glmer(formatting ~  mean_power +
+                                   mean_imposition +
+                                   mean_entitlement +
+                                   Gender + 
+                          (1 + mean_entitlement | subject) +
+                          (1 | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+anova(model_formatting_full, model_formatting_no_entitlement)
+anova(model_formatting_full, model_formatting_no_power)
+anova(model_formatting_full, model_formatting_no_imposition)
+anova(model_formatting_full, model_formatting_no_distance)
+```
+
+### Adjust for multiple comparisons
+
+```{r}
+p1 = anova(model_formatting_full, model_formatting_no_entitlement)$`Pr(>Chisq)`[2]
+p2 = anova(model_formatting_full, model_formatting_no_power)$`Pr(>Chisq)`[2]
+p3 = anova(model_formatting_full, model_formatting_no_imposition)$`Pr(>Chisq)`[2]
+p4 = anova(model_formatting_full, model_formatting_no_distance)$`Pr(>Chisq)`[2]
+
+p.adjust(c(p1, p2, p3, p4), method="holm")
+```
+
+### Use multinomial regression to extract weights
+
+```{r}
+model_formatting_full = multinom(formatting ~ mean_entitlement +
+                              mean_power +
+                              mean_imposition +
+                              mean_distance +
+                              Gender,
+                        data = coded_with_norms)
+
+z <- summary(model_formatting_full)$coefficients/summary(model_formatting_full)$standard.errors
+# 2-tailed Wald z tests to test significance of coefficients
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+
+summary(model_formatting_full)
+p
+
+
 ```
 
 
-
-## Length ~ Entitlement
-
-```{r}
-coded.no.filler$length = nchar(as.character(coded.no.filler$responses))
-
-length_entitlement = lmer(data=coded.no.filler, length~condition + Gender + (1 + condition | subject) +
-                         (1 + condition | stimNum),
-                       REML=FALSE)
-
-
-length_entitlement_null =  lmer(data=coded.no.filler, length ~ Gender + (1  + condition | subject) +
-                  (1 + condition | stimNum),
-                REML=FALSE)
-```
-
-
-```{r}
-anova(length_entitlement, length_entitlement_null)
-```
-
-
-## Justification ~ Entitlement
-
+### Reason
 
 ```{r}
 
-model_reason_full = glmer(factor(Reason2) ~ condition + Gender +
+
+model_reason_full = glmer(factor(Reason2) ~ condition +
+                                   Gender + 
                           (1 + condition | subject) +
                           (1 + condition | stimNum),
-                        data = coded.no.filler, 
+                        data = coded_with_norms, 
                         control=glmerControl(optimizer="bobyqa"),
                         family=binomial)
 
-model_reason_reduced = glmer(factor(Reason2) ~ Gender +(1 + condition | subject) +
-                          (1 + condition | stimNum), 
-                        data = coded.no.filler, 
-                        control=glmerControl(optimizer="bobyqa"),
-                        family=binomial) 
-
-model_repay_full = glmer(factor(Repayment2) ~ condition + Gender +
-                          (1 | subject) +
+model_reason_no_entitlement = glmer(factor(Reason2) ~ Gender +
+                          (1 + condition | subject) +
                           (1 + condition | stimNum),
+                        data = coded_with_norms, 
                         control=glmerControl(optimizer="bobyqa"),
-                        data = coded.no.filler, 
                         family=binomial)
 
-model_repay_reduced = glmer(factor(Repayment2) ~ Gender +(1 | subject) +
-                          (1 + condition | stimNum), 
-                        data = coded.no.filler, 
-                        control=glmerControl(optimizer="bobyqa"),
-                        family=binomial) 
+anova(model_reason_full, model_reason_no_entitlement)
+
 
 ```
 
 
-```{r}
-anova(model_reason_full, model_reason_reduced)
-anova(model_repay_full, model_repay_reduced)
-
-```
-
-## Contingencies ~ Entitlement
-
+### Repay
 
 ```{r}
-
-model_contingencies_full = glmer(factor(Conts) ~ condition + 
-                          (1 | subject) +
+model_repay_full = glmer(factor(Repayment2) ~ condition +
+                                   Gender + 
+                          (1 + condition | subject) +
                           (1 + condition | stimNum),
-                        data = coded.no.filler, 
+                        data = coded_with_norms, 
                         control=glmerControl(optimizer="bobyqa"),
                         family=binomial)
 
-model_contingencies_reduced = glmer(factor(Conts) ~ (1 | subject) +
-                          (1 + condition | stimNum), 
-                        data = coded.no.filler, 
+model_repay_no_entitlement = glmer(factor(Repayment2) ~ Gender +
+                          (1 + condition | subject) +
+                          (1 + condition | stimNum),
+                        data = coded_with_norms, 
                         control=glmerControl(optimizer="bobyqa"),
-                        family=binomial) 
+                        family=binomial)
 
-
+anova(model_repay_full, model_repay_no_entitlement)
 ```
 
+
+## Justification ~ Entitlement Norms
+
+### Reason
 
 ```{r}
-anova(model_contingencies_full, model_contingencies_reduced)
+
+model_reason_full = glmer(factor(Reason2) ~ mean_entitlement +
+                                   mean_power +
+                                   mean_imposition +
+                                   mean_distance +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_reason_no_entitlement = glmer(factor(Reason2) ~  mean_power +
+                                   mean_imposition +
+                                   mean_distance +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_reason_no_power = glmer(factor(Reason2) ~  mean_entitlement +
+                                   mean_imposition +
+                                   mean_distance +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_reason_no_imposition = glmer(factor(Reason2) ~  mean_power +
+                                   mean_entitlement +
+                                   mean_distance +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_reason_no_distance = glmer(factor(Reason2) ~  mean_power +
+                                   mean_imposition +
+                                   mean_entitlement +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+anova(model_reason_full, model_reason_no_entitlement)
+anova(model_reason_full, model_reason_no_power)
+anova(model_reason_full, model_reason_no_imposition)
+anova(model_reason_full, model_reason_no_distance)
 
 ```
 
+#### Adjust for multiple comparisons
+
+```{r}
+p1 = anova(model_reason_full, model_reason_no_entitlement)$`Pr(>Chisq)`[2]
+p2 = anova(model_reason_full, model_reason_no_power)$`Pr(>Chisq)`[2]
+p3 = anova(model_reason_full, model_reason_no_imposition)$`Pr(>Chisq)`[2]
+p4 = anova(model_reason_full, model_reason_no_distance)$`Pr(>Chisq)`[2]
+
+p.adjust(c(p1, p2, p3, p4), method="holm")
+
+summary(model_reason_full)
+```
+
+
+### Repay
+
+```{r}
+model_repay_full = glmer(factor(Repayment2) ~ mean_entitlement +
+                                   mean_power +
+                                   mean_imposition +
+                                   mean_distance +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_repay_no_entitlement = glmer(factor(Repayment2) ~  mean_power +
+                                   mean_imposition +
+                                   mean_distance +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_repay_no_power = glmer(factor(Repayment2) ~  mean_entitlement +
+                                   mean_imposition +
+                                   mean_distance +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_repay_no_imposition = glmer(factor(Repayment2) ~  mean_power +
+                                   mean_entitlement +
+                                   mean_distance +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+model_repay_no_distance = glmer(factor(Repayment2) ~  mean_power +
+                                   mean_imposition +
+                                   mean_entitlement +
+                                   Gender + 
+                          (1 | subject) +
+                          (1 + mean_entitlement | stimNum),
+                        data = coded_with_norms, 
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+anova(model_repay_full, model_repay_no_entitlement)
+anova(model_repay_full, model_repay_no_power)
+anova(model_repay_full, model_repay_no_imposition)
+anova(model_repay_full, model_repay_no_distance)
+```
+
+#### Adjust for multiple comparisons
+
+```{r}
+p1 = anova(model_repay_full, model_repay_no_entitlement)$`Pr(>Chisq)`[2]
+p2 = anova(model_repay_full, model_repay_no_power)$`Pr(>Chisq)`[2]
+p3 = anova(model_repay_full, model_repay_no_imposition)$`Pr(>Chisq)`[2]
+p4 = anova(model_repay_full, model_repay_no_distance)$`Pr(>Chisq)`[2]
+
+p.adjust(c(p1, p2, p3, p4), method="holm")
+
+summary(model_repay_full)
+```
+
+
+### Descriptive
+
+```{r}
+mean(coded_with_norms$Reason2)
+mean(coded_with_norms$Repayment2)
+```
 
 
 # Experiment 2
 
 ```{r}
-coded.no.filler = read.csv("../data/exp2_critical.csv")
+coded_with_norms = read.csv("../data/exp2_critical.csv")
+```
 
+
+## Average completion time
+
+```{r}
+df_rt = coded_with_norms %>%
+  group_by(subject) %>%
+  summarise(total_minutes = sum(rt) / 60000)
+
+mean(df_rt$total_minutes)
 ```
 
 
 ## Experiment info
 
 ```{r}
-length(unique(coded.no.filler$subject))
-table(distinct(coded.no.filler, subject, Gender)$Gender)
-mean(distinct(coded.no.filler, subject, Age)$Age)
-sd(distinct(coded.no.filler, subject, Age)$Age)
-range(distinct(coded.no.filler, subject, Age)$Age)
+length(unique(coded_with_norms$subject))
+table(distinct(coded_with_norms, subject, Gender)$Gender)
+mean(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
+sd(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
+range(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
 ```
+
+
 
 ## Formatting ~ Entitlement
 
 ```{r}
+model_full = glmer(data = coded_with_norms,
+                  formatting ~ condition + Gender+
+                    (1 + condition | subject) + (1 + condition | stimNum),
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
 
-coded.no.filler$institution = fct_recode(coded.no.filler$situation,
-                                         non_institutional = "urgency",
-                                         non_institutional = "relationship",
-                                         non_institutional = "interaction")
+model_reduced = glmer(data = coded_with_norms,
+                  formatting ~ Gender+
+                    (1 + condition | subject) + (1 + condition | stimNum),
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
 
-model.formatting.full.situation = glmer(formatting ~ condition*situation + Gender +
-                                          (1 + condition | subject) +
-                                          (1 + condition | stimNum), 
-                                        data = coded.no.filler, 
-                                        control=glmerControl(optimizer="bobyqa"),
-                                        family=binomial)
-model.formatting.full.situation.reduced = glmer(formatting ~ condition + situation + Gender +
-                                                  (1 + condition | subject) +
-                                                  (1 + condition | stimNum), 
-                                                data = coded.no.filler, 
-                                                control=glmerControl(optimizer="bobyqa"),
-                                                family=binomial)
+anova(model_full, model_reduced)
 
-model.formatting.full2 = glmer(formatting ~ situation + Gender + 
-                                 (1 + condition | subject) +
-                                 (1 + condition | stimNum), 
-                               data = coded.no.filler, 
-                               control=glmerControl(optimizer="bobyqa"),
-                               family=binomial)
-
-model.formatting.full = glmer(formatting ~ condition + Gender +
-                                (1 + condition | subject) +
-                                (1 + condition | stimNum), 
-                              data = coded.no.filler, 
-                              control=glmerControl(optimizer="bobyqa"),
-                              family=binomial)
-model.formatting.null = glmer(formatting ~ Gender + (1 + condition | subject) +
-                                (1 + condition | stimNum), 
-                              data = coded.no.filler, 
-                              control=glmerControl(optimizer="bobyqa"),
-                              family=binomial)
-
-model.formatting.none= glmer(formatting ~  (1 + condition | subject) +
-                                (1 + condition | stimNum), 
-                              data = coded.no.filler, 
-                             control=glmerControl(optimizer="bobyqa"),
-                              family=binomial)
 ```
 
 
-
+## Formatting ~ Entitlement Norms
 
 ```{r}
-anova(model.formatting.full.situation, model.formatting.full.situation.reduced)
-anova(model.formatting.full.situation.reduced, model.formatting.full2)
-anova(model.formatting.full.situation.reduced, model.formatting.full)
-anova(model.formatting.null, model.formatting.none)
+model_full_all_norms = glmer(formatting ~ mean_entitlement + 
+                              mean_power + mean_imposition + mean_distance + 
+                              Gender +
+                              (1 + mean_entitlement | subject) +
+                              (1 + mean_entitlement | stimNum), 
+                            data = coded_with_norms, 
+                            control=glmerControl(optimizer="bobyqa"),
+                            family=binomial)
+
+model_full_no_entitlement = glmer(formatting ~ mean_power + mean_imposition + mean_distance + 
+                              Gender + (1 + mean_entitlement | subject) +
+                              (1 + mean_entitlement | stimNum), 
+                            data = coded_with_norms, 
+                            control=glmerControl(optimizer="bobyqa"),
+                            family=binomial)
+
+model_full_no_power = glmer(formatting ~ mean_entitlement + mean_imposition + mean_distance + 
+                              Gender + (1 + mean_entitlement | subject) +
+                              (1 + mean_entitlement | stimNum), 
+                            data = coded_with_norms, 
+                            control=glmerControl(optimizer="bobyqa"),
+                            family=binomial)
+
+model_full_no_imposition = glmer(formatting ~ mean_power + mean_entitlement + mean_distance + 
+                              Gender + (1 + mean_entitlement | subject) +
+                              (1 + mean_entitlement | stimNum), 
+                            data = coded_with_norms, 
+                            control=glmerControl(optimizer="bobyqa"),
+                            family=binomial)
+
+model_full_no_distance = glmer(formatting ~ mean_power + mean_imposition + mean_entitlement + 
+                              Gender + (1 + mean_entitlement | subject) +
+                              (1 + mean_entitlement | stimNum), 
+                            data = coded_with_norms, 
+                            control=glmerControl(optimizer="bobyqa"),
+                            family=binomial)
+
+anova(model_full_all_norms, model_full_no_entitlement)
+anova(model_full_all_norms, model_full_no_power)
+anova(model_full_all_norms, model_full_no_imposition)
+anova(model_full_all_norms, model_full_no_distance)
 ```
+
+### Adjust for multiple comparisons
+
+```{r}
+p1 = anova(model_full_all_norms, model_full_no_entitlement)$`Pr(>Chisq)`[2]
+p2 = anova(model_full_all_norms, model_full_no_power)$`Pr(>Chisq)`[2]
+p3 = anova(model_full_all_norms, model_full_no_imposition)$`Pr(>Chisq)`[2]
+p4 = anova(model_full_all_norms, model_full_no_distance)$`Pr(>Chisq)`[2]
+
+p.adjust(c(p1, p2, p3, p4), method="holm")
+```
+
+
+### Use multinomial regression to extract weights
+
+```{r}
+model_formatting_full = multinom(formatting ~ condition +
+                                   Gender,
+                        data = coded_with_norms)
+
+z <- summary(model_formatting_full)$coefficients/summary(model_formatting_full)$standard.errors
+# 2-tailed Wald z tests to test significance of coefficients
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+
+summary(model_formatting_full)
+p
+
+model_formatting_full = multinom(formatting ~ mean_entitlement +
+                              mean_power +
+                              mean_imposition +
+                              mean_distance +
+                              Gender,
+                        data = coded_with_norms)
+
+z <- summary(model_formatting_full)$coefficients/summary(model_formatting_full)$standard.errors
+# 2-tailed Wald z tests to test significance of coefficients
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+
+summary(model_formatting_full)
+p
+```
+
+
 
 # Experiment 3
 
 ```{r}
-coded.no.filler = read.csv("../data/exp3_critical.csv")
+coded_with_norms = read.csv("../data/exp3_critical.csv")
 
 ```
+
+## Average completion time
+
+```{r}
+df_rt = coded_with_norms %>%
+  group_by(subject) %>%
+  summarise(total_minutes = sum(rt) / 60000)
+
+mean(df_rt$total_minutes)
+```
+
 
 ## Experiment info
 
 ```{r}
-length(unique(coded.no.filler$subject))
-table(distinct(coded.no.filler, subject, Gender)$Gender)
-mean(distinct(coded.no.filler, subject, Age)$Age, na.rm=TRUE)
-sd(distinct(coded.no.filler, subject, Age)$Age, na.rm=TRUE)
-range(distinct(coded.no.filler, subject, Age)$Age, na.rm=TRUE)
+length(unique(coded_with_norms$subject))
+table(distinct(coded_with_norms, subject, Gender)$Gender)
+mean(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
+sd(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
+range(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
 ```
 
-## Appropriateness ~ Entitlement * Formatting
+## Appropriateness ~ Entitlement and Formatting
+
+Here, we predict appropriateness judgments from formatting and entitlement. Because the **wonder** (e.g. "Embedded Modal") condition doesn't really change as a function of entitlement, we make the coefficients more interpretable by selecting Embedded Modal as our reference intercept.
+
 
 ```{r}
-model.formatting.entitlement.full = lmer(judgment ~ formatting*condition + Gender +
-                                           (1+condition| subject) + (1 +condition| stimNum) +
-                                           (1 | group),
-                                         data = coded.no.filler,
-                                         control=lmerControl(optimizer="bobyqa"),
-                                         REML=FALSE)
+t.test(filter(coded_with_norms, formatting == "wonder" & condition == "high")$judgment,
+       filter(coded_with_norms, formatting == "wonder" & condition == "low")$judgment)
 
+t.test(filter(coded_with_norms, formatting == "modal" & condition == "high")$judgment,
+       filter(coded_with_norms, formatting == "modal" & condition == "low")$judgment)
 
-model.formatting.entitlement.reduced = lmer(judgment ~ formatting+condition + Gender +
-                                              (1+condition| subject) + (1 + condition | stimNum) +
-                                              (1 | group),
-                                            data = coded.no.filler,
-                                            control=lmerControl(optimizer="bobyqa"),
-                                            REML=FALSE)
+t.test(filter(coded_with_norms, formatting == "direct" & condition == "high")$judgment,
+       filter(coded_with_norms, formatting == "direct" & condition == "low")$judgment)
 
-model.formatting.just.entitlement = lmer(judgment ~ condition + Gender +
-                                           (1+condition| subject) + (1 + condition | stimNum) +
-                                           (1 | group),
-                                         data = coded.no.filler,
-                                         control=lmerControl(optimizer="bobyqa"),
-                                         REML=FALSE)
-
-model.formatting.just.formatting = lmer(judgment ~ formatting + Gender +
-                                          (1+condition| subject) + (1 + condition | stimNum) +
-                                          (1 | group),
-                                        data = coded.no.filler,
-                                        control=lmerControl(optimizer="bobyqa"),
-                                        REML=FALSE)
-model.formatting.just.null = lmer(judgment ~ Gender + (1+condition| subject) + (1 + condition | stimNum) +
-                                    (1 | group),
-                                  data = coded.no.filler,
-                                  control=lmerControl(optimizer="bobyqa"),
-                                  REML=FALSE)
-model.formatting.none = lmer(judgment ~  (1+condition| subject) + (1 + condition | stimNum) +
-                                    (1 | group),
-                                  data = coded.no.filler,
-                                  control=lmerControl(optimizer="bobyqa"),
-                                  REML=FALSE)
+t.test(filter(coded_with_norms, formatting == "indirect" & condition == "high")$judgment,
+       filter(coded_with_norms, formatting == "indirect" & condition == "low")$judgment)
 ```
 
 
 ```{r}
-anova(model.formatting.entitlement.full, model.formatting.entitlement.reduced)
-anova(model.formatting.entitlement.reduced, model.formatting.just.formatting)
-anova(model.formatting.entitlement.reduced, model.formatting.just.entitlement)
-anova(model.formatting.just.entitlement, model.formatting.just.null)
-anova(model.formatting.just.formatting, model.formatting.just.null)
-anova(model.formatting.just.null, model.formatting.none)
 
+coded_with_norms$format_reordered = factor(coded_with_norms$formatting,
+                                           levels =c("wonder",
+                                                     "direct",
+                                                     "indirect",
+                                                     "modal"))
+
+coded_with_norms$entitlement_reordered = factor(coded_with_norms$condition,
+                                           levels =c("low", "high"))
+
+
+model_full_all = lmer(judgment ~ format_reordered*entitlement_reordered + 
+                              Gender +
+                             (1+condition| subject) + 
+                              (1 + condition | stimNum) +
+                             (1 + condition | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+model_no_interaction = lmer(judgment ~ formatting + entitlement_reordered + 
+                              Gender +
+                             (1+condition| subject) + 
+                              (1 + condition | stimNum) +
+                             (1 + condition | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+anova(model_full_all, model_no_interaction)
+```
+
+
+
+
+### Model comparisons for effect of entitlement
+
+Below, we see that an interaction between *normed entitlement* and *formatting* explains more variance than a model including norms for all other interpersonal variables (and their interactions with formatting). In other words, *perceived entitlement* explains additional variance in how appropriate different formatting options are judged to be.
+
+```{r}
+
+
+model_full_all_norms = lmer(judgment ~ format_reordered*mean_entitlement + 
+                              format_reordered*mean_power +
+                              format_reordered*mean_distance +
+                              format_reordered*mean_imposition +
+                              Gender +
+                             (1+mean_entitlement| subject) + 
+                              (1 + mean_entitlement | stimNum) +
+                             (1 | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+model_no_entitlement_interaction = lmer(judgment ~ mean_entitlement + 
+                              format_reordered*mean_power +
+                              format_reordered*mean_distance +
+                              format_reordered*mean_imposition +
+                              Gender +
+                             (1+mean_entitlement| subject) + 
+                                (1 + mean_entitlement | stimNum) +
+                             (1 | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+model_no_entitlement = lmer(judgment ~ format_reordered*mean_power +
+                              format_reordered*mean_distance +
+                              format_reordered*mean_imposition +
+                              Gender +
+                             (1+mean_entitlement| subject) + 
+                               (1 + mean_entitlement | stimNum) +
+                             (1 | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+anova(model_full_all_norms, model_no_entitlement_interaction)
+anova(model_no_entitlement_interaction, model_no_entitlement)
+
+```
+
+
+
+### Supplementary: Model comparisons for effect of power
+
+```{r}
+
+model_no_power_interaction = lmer(judgment ~ format_reordered + mean_power + 
+                              format_reordered*mean_entitlement +
+                              format_reordered*mean_distance +
+                              format_reordered*mean_imposition +
+                              Gender +
+                             (1+mean_entitlement| subject) + (1 +mean_entitlement| stimNum) +
+                             (1 | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+model_no_power = lmer(judgment ~ format_reordered*mean_entitlement +
+                              format_reordered*mean_distance +
+                              format_reordered*mean_imposition +
+                              Gender +
+                             (1+mean_entitlement| subject) + (1 +mean_entitlement| stimNum) +
+                             (1 | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+anova(model_full_all_norms, model_no_power_interaction)
+anova(model_no_power_interaction, model_no_power)
+
+```
+
+### Supplementary: Model comparisons for effect of imposition
+
+```{r}
+
+model_no_imposition_interaction = lmer(judgment ~ format_reordered*mean_power + 
+                              format_reordered*mean_entitlement +
+                              format_reordered*mean_distance +
+                              format_reordered + mean_imposition +
+                              Gender +
+                             (1+mean_entitlement| subject) + (1 +mean_entitlement| stimNum) +
+                             (1 | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+model_no_imposition = lmer(judgment ~ format_reordered*mean_entitlement +
+                              format_reordered*mean_distance +
+                              format_reordered*mean_power +
+                              Gender +
+                             (1+mean_entitlement| subject) + (1 +mean_entitlement| stimNum) +
+                             (1 | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+anova(model_full_all_norms, model_no_imposition_interaction)
+anova(model_no_imposition_interaction, model_no_imposition)
+
+```
+
+### Supplementary: Model comparisons for effect of distance
+
+```{r}
+
+model_no_distance_interaction = lmer(judgment ~ format_reordered*mean_power + 
+                              format_reordered*mean_entitlement +
+                              format_reordered*mean_imposition +
+                              mean_distance +
+                              Gender +
+                             (1+mean_entitlement| subject) + (1 +mean_entitlement| stimNum) +
+                             (1 | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+model_no_distance = lmer(judgment ~ format_reordered*mean_entitlement +
+                              format_reordered*mean_imposition +
+                              format_reordered*mean_power +
+                              Gender +
+                             (1+mean_entitlement| subject) + (1 +mean_entitlement| stimNum) +
+                             (1 | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+anova(model_full_all_norms, model_no_distance_interaction)
+anova(model_no_distance_interaction, model_no_distance)
+
+```
+
+
+
+#### Adjust for multiple comparisons
+
+After adjusting for multiple comparisons, we see significant effects of: 
+
+The interaction between *entitlement* and *formatting*.
+The interaction between *social distance* and *formatting*.
+
+```{r}
+p1 = anova(model_full_all_norms, model_no_entitlement_interaction)$`Pr(>Chisq)`[2]
+p2 = anova(model_no_entitlement_interaction, model_no_entitlement)$`Pr(>Chisq)`[2]
+p3 = anova(model_full_all_norms, model_no_power_interaction)$`Pr(>Chisq)`[2]
+p4 = anova(model_no_power_interaction, model_no_power)$`Pr(>Chisq)`[2]
+p5 = anova(model_full_all_norms, model_no_imposition_interaction)$`Pr(>Chisq)`[2]
+p6 = anova(model_no_imposition_interaction, model_no_imposition)$`Pr(>Chisq)`[2]
+p7 = anova(model_full_all_norms, model_no_distance_interaction)$`Pr(>Chisq)`[2]
+p8 = anova(model_no_distance_interaction, model_no_distance)$`Pr(>Chisq)`[2]
+
+p.adjust(c(p1, p2, p3, p4, p5, p6, p7, p8), method="holm")
 ```
 
