@@ -24,3 +24,70 @@ Additionally, the humnan-normed estimates:
 With random effects:  
 * `subject` (participant)  
 * `stimNum` (item)  
+
+
+## Experiment 1b
+
+Found in `exp1b_critical.csv`.
+
+The main variables of interest are:  
+* `condition`: high vs. low entitlement.  
+* `answer`: raw response produced by participant.  
+* `formatting`: annotated formatting (M, EM, D, IS).  
+* `Reason2`: final annotation for whether a reason was given.  
+* `Repayment2`: annotation for whether repayment was offered.  
+
+Additionally, the humnan-normed estimates:  
+* `mean_entitlement`  
+* `mean_power`  
+* `mean_imposition`  
+* `mean_distance`  
+
+With random effects:  
+* `subject` (participant)  
+* `stimNum` (item)  
+
+
+## Experiment 2
+
+Found in `exp2_critical.csv`.
+
+The main variables of interest are:  
+* `condition`: high vs. low entitlement.  
+* `answer`: response chosen by participant.  
+* `formatting`: option chosen (D, M, EM, IS)
+
+Additionally, the humnan-normed estimates:  
+* `mean_entitlement`  
+* `mean_power`  
+* `mean_imposition`  
+* `mean_distance`  
+
+With random effects:  
+* `subject` (participant)  
+* `stimNum` (item)  
+
+
+## Experiment 3
+
+Found in `exp3_critical.csv`.
+
+The main variables of interest are:  
+* `condition`: high vs. low entitlement.  
+* `answer`: response chosen by participant.  
+* `formatting`: formatting used by character (D, M, EM, IS)  
+* `judgment`: centered answer (from Likert scale)
+
+Additionally, the humnan-normed estimates:  
+* `mean_entitlement`  
+* `mean_power`  
+* `mean_imposition`  
+* `mean_distance`  
+
+With random effects:  
+* `subject` (participant)  
+* `stimNum` (item)  
+
+
+
+
