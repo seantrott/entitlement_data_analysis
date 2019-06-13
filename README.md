@@ -15,7 +15,7 @@ The main variables of interest are:
 * `reason_final`: final annotation for whether a reason was given.  
 * `Just2.ST`: annotation for whether repayment was offered.  
 
-Additionally, the humnan-normed estimates:  
+Additionally, the human-normed estimates:  
 * `mean_entitlement`  
 * `mean_power`  
 * `mean_imposition`  
@@ -37,7 +37,7 @@ The main variables of interest are:
 * `Reason2`: final annotation for whether a reason was given.  
 * `Repayment2`: annotation for whether repayment was offered.  
 
-Additionally, the humnan-normed estimates:  
+Additionally, the human-normed estimates:  
 * `mean_entitlement`  
 * `mean_power`  
 * `mean_imposition`  
@@ -57,7 +57,7 @@ The main variables of interest are:
 * `answer`: response chosen by participant.  
 * `formatting`: option chosen (D, M, EM, IS)
 
-Additionally, the humnan-normed estimates:  
+Additionally, the human-normed estimates:  
 * `mean_entitlement`  
 * `mean_power`  
 * `mean_imposition`  
@@ -78,7 +78,7 @@ The main variables of interest are:
 * `formatting`: formatting used by character (D, M, EM, IS)  
 * `judgment`: centered answer (from Likert scale)
 
-Additionally, the humnan-normed estimates:  
+Additionally, the human-normed estimates:  
 * `mean_entitlement`  
 * `mean_power`  
 * `mean_imposition`  
