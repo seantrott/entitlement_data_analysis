@@ -151,33 +151,6 @@ mean(df_rt$total_minutes)
 ```
 
 
-## Inter-rater reliability
-
-
-```{r}
-coded.reduced = coded_with_norms %>%
-  filter(Code.SB != "-") %>%
-  filter(Code.SB != "O") %>%
-  filter(Code.SB != "")
-
-nrow(coded.reduced)
-nrow(coded.reduced) / nrow(coded_with_norms)
-```
-
-
-### Formatting
-
-```{r}
-coded.reduced$Code.SB = factor(coded.reduced$Code.SB, levels=c("D", "IS", "M", "EM"))
-coded.reduced$Code.ST = factor(coded.reduced$Code.ST, levels=c("D", "IS", "M", "EM"))
-coded.reduced$agree = coded.reduced$Code.SB == coded.reduced$Code.ST
-mean(coded.reduced$agree)
-
-formatting_bound = cbind(coded.reduced$Code.SB, coded.reduced$Code.ST)
-formatting_kappa = cohen.kappa(formatting_bound)
-formatting_kappa
-```
-
 ## Experiment info
 
 ```{r}
@@ -355,33 +328,6 @@ table(distinct(coded_with_norms, subject, Gender)$Gender)
 mean(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
 sd(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
 range(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
-```
-
-## Inter-rater reliability
-
-```{r}
-coded.reduced = coded_with_norms %>%
-  filter(Code.SB != "-") %>%
-  filter(Code.SB != "O") %>%
-  filter(Code.SB != "")
-
-nrow(coded.reduced)
-nrow(coded.reduced) / nrow(coded_with_norms)
-```
-
-
-### Formatting
-
-
-```{r}
-coded.reduced$Code.SB = factor(coded.reduced$Code.SB, levels=c("D", "IS", "M", "EM"))
-coded.reduced$formatting = factor(coded.reduced$formatting, levels=c("D", "IS", "M", "EM"))
-coded.reduced$agree = coded.reduced$Code.SB == coded.reduced$formatting
-mean(coded.reduced$agree)
-
-formatting_bound = cbind(coded.reduced$Code.SB, coded.reduced$formatting)
-formatting_kappa = cohen.kappa(formatting_bound)
-formatting_kappa
 ```
 
 ## Formatting ~ Entitlement
