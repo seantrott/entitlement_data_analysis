@@ -131,24 +131,14 @@ $(document).ready(function () {
 <li><a href="#average-completion-time-1">Average completion time</a></li>
 <li><a href="#inter-rater-reliability">Inter-rater reliability</a><ul>
 <li><a href="#formatting">Formatting</a></li>
-<li><a href="#reason">Reason</a></li>
-<li><a href="#repay">Repay</a></li>
 </ul></li>
 <li><a href="#experiment-info-1">Experiment info</a></li>
-<li><a href="#formatting-entitlement">Formatting ~ Entitlement</a></li>
+<li><a href="#formatting-entitlement">Formatting ~ Entitlement</a><ul>
+<li><a href="#use-multinomial-regression-to-extract-weights">Use multinomial regression to extract weights</a></li>
+</ul></li>
 <li><a href="#formatting-entitlement-norms">Formatting ~ Entitlement Norms</a><ul>
 <li><a href="#adjust-for-multiple-comparisons">Adjust for multiple comparisons</a></li>
-<li><a href="#use-multinomial-regression-to-extract-weights">Use multinomial regression to extract weights</a></li>
-<li><a href="#exploratory-analysis-institution">Exploratory analysis (institution)</a></li>
-</ul></li>
-<li><a href="#justification-entitlement">Justification ~ Entitlement</a><ul>
-<li><a href="#reason-1">Reason</a></li>
-<li><a href="#repay-1">Repay</a></li>
-</ul></li>
-<li><a href="#justification-entitlement-norms">Justification ~ Entitlement Norms</a><ul>
-<li><a href="#reason-2">Reason</a></li>
-<li><a href="#repay-2">Repay</a></li>
-<li><a href="#descriptive">Descriptive</a></li>
+<li><a href="#use-multinomial-regression-to-extract-weights-1">Use multinomial regression to extract weights</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#experiment-1b">Experiment 1b</a><ul>
@@ -156,29 +146,24 @@ $(document).ready(function () {
 <li><a href="#experiment-info-2">Experiment info</a></li>
 <li><a href="#inter-rater-reliability-1">Inter-rater reliability</a><ul>
 <li><a href="#formatting-1">Formatting</a></li>
-<li><a href="#reason-3">Reason</a></li>
-<li><a href="#repay-3">Repay</a></li>
 </ul></li>
-<li><a href="#formatting-entitlement-1">Formatting ~ Entitlement</a></li>
+<li><a href="#formatting-entitlement-1">Formatting ~ Entitlement</a><ul>
+<li><a href="#use-multinomial-regression-to-extract-weights-2">Use multinomial regression to extract weights</a></li>
+</ul></li>
 <li><a href="#formatting-entitlement-norms-1">Formatting ~ Entitlement Norms</a><ul>
-<li><a href="#adjust-for-multiple-comparisons-3">Adjust for multiple comparisons</a></li>
-<li><a href="#use-multinomial-regression-to-extract-weights-1">Use multinomial regression to extract weights</a></li>
-<li><a href="#reason-4">Reason</a></li>
-<li><a href="#repay-4">Repay</a></li>
-</ul></li>
-<li><a href="#justification-entitlement-norms-1">Justification ~ Entitlement Norms</a><ul>
-<li><a href="#reason-5">Reason</a></li>
-<li><a href="#repay-5">Repay</a></li>
-<li><a href="#descriptive-1">Descriptive</a></li>
+<li><a href="#adjust-for-multiple-comparisons-1">Adjust for multiple comparisons</a></li>
+<li><a href="#use-multinomial-regression-to-extract-weights-3">Use multinomial regression to extract weights</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#experiment-2">Experiment 2</a><ul>
 <li><a href="#average-completion-time-3">Average completion time</a></li>
 <li><a href="#experiment-info-3">Experiment info</a></li>
-<li><a href="#formatting-entitlement-2">Formatting ~ Entitlement</a></li>
+<li><a href="#formatting-entitlement-2">Formatting ~ Entitlement</a><ul>
+<li><a href="#use-multinomial-regression-to-extract-weights-4">Use multinomial regression to extract weights</a></li>
+</ul></li>
 <li><a href="#formatting-entitlement-norms-2">Formatting ~ Entitlement Norms</a><ul>
-<li><a href="#adjust-for-multiple-comparisons-6">Adjust for multiple comparisons</a></li>
-<li><a href="#use-multinomial-regression-to-extract-weights-2">Use multinomial regression to extract weights</a></li>
+<li><a href="#adjust-for-multiple-comparisons-2">Adjust for multiple comparisons</a></li>
+<li><a href="#use-multinomial-regression-to-extract-weights-5">Use multinomial regression to extract weights</a></li>
 </ul></li>
 </ul></li>
 <li><a href="#experiment-3">Experiment 3</a><ul>
@@ -194,7 +179,6 @@ $(document).ready(function () {
 </ul>
 </div>
 
-<pre class="r"><code># setwd(&quot;/Users/seantrott/Dropbox/UCSD/Research/IndirectSpeechActs/Entitlement/entitlement_data_analysis/analysis&quot;)</code></pre>
 <div id="norm-information" class="section level1">
 <h1>Norm information</h1>
 <pre class="r"><code>df_normed = read_csv(&quot;../data/norming_data.csv&quot;)</code></pre>
@@ -576,21 +560,23 @@ summary(m1_distance)</code></pre>
 ##   stimNum = col_integer(),
 ##   rt = col_integer(),
 ##   trial_index = col_integer(),
+##   time_elapsed = col_integer(),
 ##   subject = col_integer(),
+##   surveyCode = col_integer(),
+##   Preface.ST = col_integer(),
+##   Contingencies.ST = col_integer(),
+##   Preface2.ST = col_integer(),
+##   Contingencies2.ST = col_integer(),
 ##   Just1.ST = col_integer(),
 ##   Just2.ST = col_integer(),
 ##   Age = col_integer(),
+##   Preface.AL = col_integer(),
+##   Contingencies.AL = col_integer(),
 ##   Reason.SB = col_integer(),
 ##   Repayment.SB = col_integer(),
-##   Reason.JV = col_integer(),
-##   mean_entitlement = col_double(),
-##   sd_entitlement = col_double(),
-##   mean_imposition = col_double(),
-##   sd_imposition = col_double(),
-##   mean_power = col_double(),
-##   sd_power = col_double(),
-##   mean_distance = col_double(),
-##   sd_distance = col_double()
+##   Contingencies.SB = col_integer(),
+##   length = col_integer()
+##   # ... with 11 more columns
 ## )</code></pre>
 <pre><code>## See spec(...) for full column specifications.</code></pre>
 <pre class="r"><code>coded_with_norms$formatting = factor(coded_with_norms$formatting)</code></pre>
@@ -634,50 +620,6 @@ formatting_kappa = cohen.kappa(formatting_bound)</code></pre>
 ## 
 ##  Number of subjects = 111</code></pre>
 </div>
-<div id="reason" class="section level3">
-<h3>Reason</h3>
-<pre class="r"><code>coded.reduced$agree_reason = coded.reduced$Reason.SB == coded.reduced$Just1.ST
-mean(coded.reduced$agree_reason)</code></pre>
-<pre><code>## [1] 0.7117117</code></pre>
-<pre class="r"><code>preface_bound = cbind(coded.reduced$Reason.SB, coded.reduced$Just1.ST)
-preface_kappa = cohen.kappa(preface_bound)</code></pre>
-<pre><code>## Warning in any(abs(bounds)): coercing argument of type 'double' to logical</code></pre>
-<pre class="r"><code>preface_kappa</code></pre>
-<pre><code>## Call: cohen.kappa1(x = x, w = w, n.obs = n.obs, alpha = alpha, levels = levels)
-## 
-## Cohen Kappa and Weighted Kappa correlation coefficients and confidence boundaries 
-##                  lower estimate upper
-## unweighted kappa  0.31     0.45  0.59
-## weighted kappa    0.31     0.45  0.59
-## 
-##  Number of subjects = 111</code></pre>
-<div id="set-reason-to-jvs-codes-if-disagreement" class="section level4">
-<h4>Set reason to JV’s codes if disagreement</h4>
-<pre class="r"><code>coded_with_norms$reason_final = ifelse(coded_with_norms$Reason.JV %in% c(0, 1), 
-                                       coded_with_norms$Reason.JV,
-                                       coded_with_norms$Just1.ST)</code></pre>
-</div>
-</div>
-<div id="repay" class="section level3">
-<h3>Repay</h3>
-<pre class="r"><code>coded.reduced$agree_repay = coded.reduced$Repayment.SB == coded.reduced$Just2.ST
-mean(coded.reduced$agree_repay)</code></pre>
-<pre><code>## [1] 0.972973</code></pre>
-<pre class="r"><code>preface_bound = cbind(coded.reduced$Repayment.SB, coded.reduced$Just2.ST)
-preface_kappa = cohen.kappa(preface_bound)</code></pre>
-<pre><code>## Warning in any(abs(bounds)): coercing argument of type 'double' to logical</code></pre>
-<pre><code>## Warning in cohen.kappa1(x, w = w, n.obs = n.obs, alpha = alpha, levels =
-## levels): upper or lower confidence interval exceed abs(1) and set to +/- 1.</code></pre>
-<pre class="r"><code>preface_kappa</code></pre>
-<pre><code>## Call: cohen.kappa1(x = x, w = w, n.obs = n.obs, alpha = alpha, levels = levels)
-## 
-## Cohen Kappa and Weighted Kappa correlation coefficients and confidence boundaries 
-##                  lower estimate upper
-## unweighted kappa  0.71     0.86     1
-## weighted kappa    0.71     0.86     1
-## 
-##  Number of subjects = 111</code></pre>
-</div>
 </div>
 <div id="experiment-info-1" class="section level2">
 <h2>Experiment info</h2>
@@ -686,24 +628,24 @@ preface_kappa = cohen.kappa(preface_bound)</code></pre>
 <pre class="r"><code>table(distinct(coded_with_norms, subject, Gender)$Gender)</code></pre>
 <pre><code>## 
 ## Female   Male 
-##     43     30</code></pre>
+##     22     51</code></pre>
 <pre class="r"><code>mean(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)</code></pre>
-<pre><code>## [1] 36.09589</code></pre>
+<pre><code>## [1] 33.15068</code></pre>
 <pre class="r"><code>sd(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)</code></pre>
-<pre><code>## [1] 13.37614</code></pre>
+<pre><code>## [1] 8.66133</code></pre>
 <pre class="r"><code>range(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)</code></pre>
-<pre><code>## [1] 25 52</code></pre>
+<pre><code>## [1] 23 69</code></pre>
 </div>
 <div id="formatting-entitlement" class="section level2">
 <h2>Formatting ~ Entitlement</h2>
 <pre class="r"><code>model_full = glmer(data = coded_with_norms,
-                  formatting ~ condition + Gender+
+                  formatting ~ condition + Gender +
                     (1 + condition | subject) + (1 + condition | stimNum),
                         control=glmerControl(optimizer=&quot;bobyqa&quot;),
                         family=binomial)</code></pre>
 <pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
 <pre class="r"><code>model_reduced = glmer(data = coded_with_norms,
-                  formatting ~ Gender+
+                  formatting ~ Gender +
                     (1 + condition | subject) + (1 + condition | stimNum),
                         control=glmerControl(optimizer=&quot;bobyqa&quot;),
                         family=binomial)</code></pre>
@@ -715,11 +657,47 @@ preface_kappa = cohen.kappa(preface_bound)</code></pre>
 ## model_reduced:     stimNum)
 ## model_full: formatting ~ condition + Gender + (1 + condition | subject) + 
 ## model_full:     (1 + condition | stimNum)
-##               Df    AIC    BIC  logLik deviance  Chisq Chi Df Pr(&gt;Chisq)  
-## model_reduced  8 422.60 454.78 -203.30   406.60                           
-## model_full     9 421.88 458.09 -201.94   403.88 2.7209      1    0.09904 .
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+##               Df    AIC    BIC  logLik deviance  Chisq Chi Df Pr(&gt;Chisq)
+## model_reduced  8 423.53 455.72 -203.77   407.53                         
+## model_full     9 422.88 459.09 -202.44   404.88 2.6488      1     0.1036</code></pre>
+<div id="use-multinomial-regression-to-extract-weights" class="section level3">
+<h3>Use multinomial regression to extract weights</h3>
+<pre class="r"><code>model_formatting_full = multinom(formatting ~ condition +
+                              Gender,
+                        data = coded_with_norms)</code></pre>
+<pre><code>## # weights:  16 (9 variable)
+## initial  value 572.539571 
+## iter  10 value 450.056529
+## final  value 449.733121 
+## converged</code></pre>
+<pre class="r"><code>z &lt;- summary(model_formatting_full)$coefficients/summary(model_formatting_full)$standard.errors
+# 2-tailed Wald z tests to test significance of coefficients
+p &lt;- (1 - pnorm(abs(z), 0, 1)) * 2
+
+summary(model_formatting_full)</code></pre>
+<pre><code>## Call:
+## multinom(formula = formatting ~ condition + Gender, data = coded_with_norms)
+## 
+## Coefficients:
+##    (Intercept) conditionlow GenderMale
+## EM  -0.3269373  1.105421168 -0.9806930
+## IS  -3.2929793  1.718155941 -0.2611661
+## M    0.6343959  0.008899263 -0.1478832
+## 
+## Std. Errors:
+##    (Intercept) conditionlow GenderMale
+## EM   0.3082429    0.3066610  0.3149642
+## IS   0.8750719    0.8039923  0.7164619
+## M    0.2527485    0.2336473  0.2694920
+## 
+## Residual Deviance: 899.4662 
+## AIC: 917.4662</code></pre>
+<pre class="r"><code>p</code></pre>
+<pre><code>##     (Intercept) conditionlow  GenderMale
+## EM 0.2888497191 0.0003125133 0.001847792
+## IS 0.0001678231 0.0325955255 0.715468289
+## M  0.0120735055 0.9696171690 0.583178427</code></pre>
+</div>
 </div>
 <div id="formatting-entitlement-norms" class="section level2">
 <h2>Formatting ~ Entitlement Norms</h2>
@@ -727,7 +705,7 @@ preface_kappa = cohen.kappa(preface_bound)</code></pre>
                               mean_power +
                               mean_imposition +
                               mean_distance +
-                              Gender + 
+                              Gender +
                           (1 + mean_entitlement | subject) +
                           (1 | stimNum),
                         data = coded_with_norms, 
@@ -783,11 +761,11 @@ anova(model_formatting_full, model_formatting_no_entitlement)</code></pre>
 ## model_formatting_full:     mean_distance + Gender + (1 + mean_entitlement | subject) + 
 ## model_formatting_full:     (1 | stimNum)
 ##                                 Df    AIC    BIC  logLik deviance  Chisq
-## model_formatting_no_entitlement  9 396.39 432.60 -189.19   378.39       
-## model_formatting_full           10 397.41 437.64 -188.71   377.41 0.9763
+## model_formatting_no_entitlement  9 396.74 432.95 -189.37   378.74       
+## model_formatting_full           10 397.32 437.55 -188.66   377.32 1.4166
 ##                                 Chi Df Pr(&gt;Chisq)
 ## model_formatting_no_entitlement                  
-## model_formatting_full                1     0.3231</code></pre>
+## model_formatting_full                1      0.234</code></pre>
 <pre class="r"><code>anova(model_formatting_full, model_formatting_no_power)</code></pre>
 <pre><code>## Data: coded_with_norms
 ## Models:
@@ -796,12 +774,12 @@ anova(model_formatting_full, model_formatting_no_entitlement)</code></pre>
 ## model_formatting_full: formatting ~ mean_entitlement + mean_power + mean_imposition + 
 ## model_formatting_full:     mean_distance + Gender + (1 + mean_entitlement | subject) + 
 ## model_formatting_full:     (1 | stimNum)
-##                           Df    AIC    BIC  logLik deviance  Chisq Chi Df
-## model_formatting_no_power  9 396.38 432.59 -189.19   378.38              
-## model_formatting_full     10 397.41 437.64 -188.71   377.41 0.9705      1
+##                           Df    AIC    BIC  logLik deviance Chisq Chi Df
+## model_formatting_no_power  9 395.85 432.06 -188.93   377.85             
+## model_formatting_full     10 397.32 437.55 -188.66   377.32  0.53      1
 ##                           Pr(&gt;Chisq)
 ## model_formatting_no_power           
-## model_formatting_full         0.3245</code></pre>
+## model_formatting_full         0.4666</code></pre>
 <pre class="r"><code>anova(model_formatting_full, model_formatting_no_imposition)</code></pre>
 <pre><code>## Data: coded_with_norms
 ## Models:
@@ -811,11 +789,11 @@ anova(model_formatting_full, model_formatting_no_entitlement)</code></pre>
 ## model_formatting_full:     mean_distance + Gender + (1 + mean_entitlement | subject) + 
 ## model_formatting_full:     (1 | stimNum)
 ##                                Df    AIC    BIC  logLik deviance  Chisq
-## model_formatting_no_imposition  9 405.08 441.29 -193.54   387.08       
-## model_formatting_full          10 397.41 437.64 -188.71   377.41 9.6727
+## model_formatting_no_imposition  9 405.02 441.24 -193.51   387.02       
+## model_formatting_full          10 397.32 437.55 -188.66   377.32 9.7042
 ##                                Chi Df Pr(&gt;Chisq)   
 ## model_formatting_no_imposition                     
-## model_formatting_full               1    0.00187 **
+## model_formatting_full               1   0.001839 **
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre class="r"><code>anova(model_formatting_full, model_formatting_no_distance)</code></pre>
@@ -827,11 +805,11 @@ anova(model_formatting_full, model_formatting_no_entitlement)</code></pre>
 ## model_formatting_full:     mean_distance + Gender + (1 + mean_entitlement | subject) + 
 ## model_formatting_full:     (1 | stimNum)
 ##                              Df    AIC    BIC  logLik deviance  Chisq
-## model_formatting_no_distance  9 403.27 439.48 -192.63   385.27       
-## model_formatting_full        10 397.41 437.64 -188.71   377.41 7.8569
+## model_formatting_no_distance  9 402.72 438.93 -192.36   384.72       
+## model_formatting_full        10 397.32 437.55 -188.66   377.32 7.3966
 ##                              Chi Df Pr(&gt;Chisq)   
 ## model_formatting_no_distance                     
-## model_formatting_full             1   0.005063 **
+## model_formatting_full             1   0.006535 **
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div id="adjust-for-multiple-comparisons" class="section level3">
@@ -842,7 +820,7 @@ p3 = anova(model_formatting_full, model_formatting_no_imposition)$`Pr(&gt;Chisq)
 p4 = anova(model_formatting_full, model_formatting_no_distance)$`Pr(&gt;Chisq)`[2]
 
 p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
-<pre><code>## [1] 0.646226850 0.646226850 0.007481225 0.015188391</code></pre>
+<pre><code>## [1] 0.467942349 0.467942349 0.007354057 0.019604025</code></pre>
 <pre class="r"><code>summary(model_formatting_full)</code></pre>
 <pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
 ##   Approximation) [glmerMod]
@@ -854,41 +832,41 @@ p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
 ## Control: glmerControl(optimizer = &quot;bobyqa&quot;)
 ## 
 ##      AIC      BIC   logLik deviance df.resid 
-##    397.4    437.6   -188.7    377.4      403 
+##    397.3    437.6   -188.7    377.3      403 
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -3.9449 -0.4572  0.2023  0.3997  2.2530 
+## -4.1397 -0.4548  0.2043  0.4163  2.1513 
 ## 
 ## Random effects:
 ##  Groups  Name             Variance Std.Dev. Corr 
-##  subject (Intercept)      41.957   6.477         
-##          mean_entitlement  1.232   1.110    -0.98
+##  subject (Intercept)      37.561   6.129         
+##          mean_entitlement  1.097   1.047    -0.98
 ##  stimNum (Intercept)       0.000   0.000         
 ## Number of obs: 413, groups:  subject, 73; stimNum, 6
 ## 
 ## Fixed effects:
 ##                  Estimate Std. Error z value Pr(&gt;|z|)   
-## (Intercept)       -5.4781     5.1253  -1.069  0.28515   
-## mean_entitlement  -0.5727     0.5813  -0.985  0.32450   
-## mean_power         0.3909     0.4013   0.974  0.33003   
-## mean_imposition    1.3891     0.4759   2.919  0.00351 **
-## mean_distance      0.5429     0.1995   2.722  0.00649 **
-## GenderMale         0.3784     0.6698   0.565  0.57213   
+## (Intercept)       -3.1991     4.0790  -0.784  0.43288   
+## mean_entitlement  -0.6602     0.5594  -1.180  0.23797   
+## mean_power         0.2100     0.2903   0.723  0.46937   
+## mean_imposition    1.2659     0.4367   2.899  0.00375 **
+## mean_distance      0.5186     0.1978   2.622  0.00874 **
+## GenderMale        -0.3029     0.4719  -0.642  0.52098   
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Correlation of Fixed Effects:
 ##             (Intr) mn_ntt mn_pwr mn_mps mn_dst
-## men_nttlmnt -0.804                            
-## mean_power  -0.580  0.046                     
-## mean_impstn -0.781  0.689  0.167              
-## mean_distnc  0.122 -0.498  0.472 -0.451       
-## GenderMale  -0.617  0.218  0.694  0.395  0.178
+## men_nttlmnt -0.861                            
+## mean_power  -0.299 -0.133                     
+## mean_impstn -0.739  0.671 -0.143              
+## mean_distnc  0.270 -0.546  0.497 -0.563       
+## GenderMale  -0.174  0.033  0.126  0.046  0.027
 ## convergence code: 0
 ## boundary (singular) fit: see ?isSingular</code></pre>
 </div>
-<div id="use-multinomial-regression-to-extract-weights" class="section level3">
+<div id="use-multinomial-regression-to-extract-weights-1" class="section level3">
 <h3>Use multinomial regression to extract weights</h3>
 <pre class="r"><code>model_formatting_full = multinom(formatting ~ mean_entitlement +
                               mean_power +
@@ -898,16 +876,10 @@ p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
                         data = coded_with_norms)</code></pre>
 <pre><code>## # weights:  28 (18 variable)
 ## initial  value 572.539571 
-## iter  10 value 430.155748
-## iter  20 value 404.920464
-## iter  30 value 403.992055
-## iter  40 value 403.838021
-## iter  50 value 403.815094
-## iter  60 value 403.708384
-## iter  70 value 403.579112
-## iter  70 value 403.579111
-## iter  70 value 403.579111
-## final  value 403.579111 
+## iter  10 value 426.876121
+## iter  20 value 401.323066
+## iter  30 value 400.433667
+## final  value 400.402986 
 ## converged</code></pre>
 <pre class="r"><code>z &lt;- summary(model_formatting_full)$coefficients/summary(model_formatting_full)$standard.errors
 # 2-tailed Wald z tests to test significance of coefficients
@@ -919,506 +891,36 @@ summary(model_formatting_full)</code></pre>
 ##     mean_imposition + mean_distance + Gender, data = coded_with_norms)
 ## 
 ## Coefficients:
-##    (Intercept) mean_entitlement mean_power mean_imposition mean_distance
-## EM   -4.913646       -0.3099222  0.0337280       1.2798501     0.2092371
-## IS  -21.189086        1.6327882  0.1418018       4.0183326    -2.1416600
-## M    -5.766943        0.1133634  0.1001956       0.9182663     0.3907772
-##    GenderMale
-## EM -0.6578470
-## IS  1.4313912
-## M   0.1047805
+##    (Intercept) mean_entitlement  mean_power mean_imposition mean_distance
+## EM   -7.951258      0.006753527  0.24168185       1.5043150     0.1799461
+## IS   -4.166382     -0.158903894 -0.33533548       2.1950858    -1.4039870
+## M    -4.883508      0.050307774  0.04207354       0.8813405     0.3848747
+##     GenderMale
+## EM -0.96584254
+## IS -0.18378429
+## M  -0.07744675
 ## 
 ## Std. Errors:
 ##    (Intercept) mean_entitlement mean_power mean_imposition mean_distance
-## EM    5.597258        0.5533330  0.4052452       0.5402618     0.2138032
-## IS   22.095547        2.3057850  0.9671159       2.6471213     1.0987026
-## M     4.429834        0.4493105  0.3226762       0.4193132     0.1640317
+## EM    3.992033        0.4572496  0.3158880       0.4875836     0.2178873
+## IS   12.938405        1.4551436  0.7795929       1.6614648     0.6669374
+## M     2.945482        0.3847445  0.2224630       0.3753414     0.1639776
 ##    GenderMale
-## EM  0.5459297
-## IS  1.3889824
-## M   0.4590467
+## EM  0.3470913
+## IS  0.7410501
+## M   0.2956569
 ## 
-## Residual Deviance: 807.1582 
-## AIC: 843.1582</code></pre>
+## Residual Deviance: 800.806 
+## AIC: 836.806</code></pre>
 <pre class="r"><code>p</code></pre>
 <pre><code>##    (Intercept) mean_entitlement mean_power mean_imposition mean_distance
-## EM   0.3800160        0.5754107  0.9336698      0.01783895    0.32775619
-## IS   0.3375711        0.4788665  0.8834293      0.12901416    0.05126406
-## M    0.1929705        0.8008051  0.7561699      0.02852934    0.01720362
+## EM  0.04639503        0.9882158  0.4442196     0.002033844    0.40887902
+## IS  0.74744006        0.9130427  0.6670925     0.186442996    0.03528039
+## M   0.09732442        0.8959681  0.8499941     0.018869267    0.01891932
 ##    GenderMale
-## EM  0.2282021
-## IS  0.3027602
-## M   0.8194466</code></pre>
-</div>
-<div id="exploratory-analysis-institution" class="section level3">
-<h3>Exploratory analysis (institution)</h3>
-<p>[ Redo with entitlement norms ]</p>
-<pre class="r"><code>coded_with_norms$institution = fct_recode(coded_with_norms$situation,
-                                         &quot;institution&quot;=&quot;urgency&quot;,
-                                         &quot;non&quot;=&quot;relationship&quot;,
-                                         &quot;non&quot;=&quot;interaction&quot;)
-
-model_institution = glmer(formatting ~ mean_entitlement + institution +
-                            mean_power + mean_distance + mean_imposition + 
-                                          (1 + mean_entitlement | subject) +
-                                          (1 | stimNum), 
-                                        data = coded_with_norms, 
-                                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_institution_reduced = glmer(formatting ~ mean_entitlement +
-                            mean_power + mean_distance + mean_imposition + 
-                                          (1 + mean_entitlement | subject) +
-                                          (1 | stimNum), 
-                                        data = coded_with_norms, 
-                                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>anova(model_institution, model_institution_reduced)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_institution_reduced: formatting ~ mean_entitlement + mean_power + mean_distance + 
-## model_institution_reduced:     mean_imposition + (1 + mean_entitlement | subject) + (1 | 
-## model_institution_reduced:     stimNum)
-## model_institution: formatting ~ mean_entitlement + institution + mean_power + mean_distance + 
-## model_institution:     mean_imposition + (1 + mean_entitlement | subject) + (1 | 
-## model_institution:     stimNum)
-##                           Df    AIC    BIC  logLik deviance  Chisq Chi Df
-## model_institution_reduced  9 395.73 431.94 -188.87   377.73              
-## model_institution         10 397.44 437.68 -188.72   377.44 0.2895      1
-##                           Pr(&gt;Chisq)
-## model_institution_reduced           
-## model_institution             0.5906</code></pre>
-</div>
-</div>
-<div id="justification-entitlement" class="section level2">
-<h2>Justification ~ Entitlement</h2>
-<div id="reason-1" class="section level3">
-<h3>Reason</h3>
-<pre class="r"><code>model_reason_full = glmer(factor(reason_final) ~ condition +
-                                   Gender + 
-                          (1 + condition | subject) +
-                          (1 + condition | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)
-
-model_reason_no_entitlement = glmer(factor(reason_final) ~ Gender +
-                          (1 + condition | subject) +
-                          (1 + condition | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)
-
-anova(model_reason_full, model_reason_no_entitlement)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_reason_no_entitlement: factor(reason_final) ~ Gender + (1 + condition | subject) + (1 + 
-## model_reason_no_entitlement:     condition | stimNum)
-## model_reason_full: factor(reason_final) ~ condition + Gender + (1 + condition | 
-## model_reason_full:     subject) + (1 + condition | stimNum)
-##                             Df    AIC    BIC  logLik deviance  Chisq
-## model_reason_no_entitlement  8 519.86 552.05 -251.93   503.86       
-## model_reason_full            9 521.82 558.03 -251.91   503.82 0.0425
-##                             Chi Df Pr(&gt;Chisq)
-## model_reason_no_entitlement                  
-## model_reason_full                1     0.8367</code></pre>
-</div>
-<div id="repay-1" class="section level3">
-<h3>Repay</h3>
-<pre class="r"><code>model_repay_full = glmer(factor(Just2.ST) ~ condition +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + condition | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_repay_no_entitlement = glmer(factor(Just2.ST) ~ Gender +
-                          (1 | subject) +
-                          (1 + condition | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>anova(model_repay_full, model_repay_no_entitlement)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_repay_no_entitlement: factor(Just2.ST) ~ Gender + (1 | subject) + (1 + condition | 
-## model_repay_no_entitlement:     stimNum)
-## model_repay_full: factor(Just2.ST) ~ condition + Gender + (1 | subject) + (1 + 
-## model_repay_full:     condition | stimNum)
-##                            Df    AIC    BIC  logLik deviance  Chisq Chi Df
-## model_repay_no_entitlement  6 202.15 226.29 -95.076   190.15              
-## model_repay_full            7 202.76 230.92 -94.379   188.76 1.3932      1
-##                            Pr(&gt;Chisq)
-## model_repay_no_entitlement           
-## model_repay_full               0.2379</code></pre>
-</div>
-</div>
-<div id="justification-entitlement-norms" class="section level2">
-<h2>Justification ~ Entitlement Norms</h2>
-<div id="reason-2" class="section level3">
-<h3>Reason</h3>
-<div id="actual-models" class="section level4">
-<h4>Actual models</h4>
-<pre class="r"><code>model_reason_full = glmer(factor(reason_final) ~ mean_entitlement +
-                                   mean_power +
-                                   mean_imposition +
-                                   mean_distance +
-                            Gender +
-                          (1 + mean_entitlement | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_reason_no_entitlement = glmer(factor(reason_final) ~  mean_power +
-                                   mean_imposition +
-                                   mean_distance +
-                                     Gender +
-                          (1 + mean_entitlement  | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_reason_no_power = glmer(factor(reason_final) ~  mean_entitlement +
-                                   mean_imposition +
-                                   mean_distance +
-                                Gender +
-                          (1 + mean_entitlement | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl =
-## control$checkConv, : Model failed to converge with max|grad| = 0.0711847
-## (tol = 0.001, component 1)</code></pre>
-<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl = control$checkConv, : Model is nearly unidentifiable: very large eigenvalue
-##  - Rescale variables?</code></pre>
-<pre class="r"><code>model_reason_no_imposition = glmer(factor(reason_final) ~  mean_power +
-                                   mean_entitlement +
-                                   mean_distance +
-                                     Gender +
-                          (1 + mean_entitlement | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl =
-## control$checkConv, : Model failed to converge with max|grad| = 0.141937
-## (tol = 0.001, component 1)</code></pre>
-<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl = control$checkConv, : Model is nearly unidentifiable: very large eigenvalue
-##  - Rescale variables?;Model is nearly unidentifiable: large eigenvalue ratio
-##  - Rescale variables?</code></pre>
-<pre class="r"><code>model_reason_no_distance = glmer(factor(reason_final) ~  mean_power +
-                                   mean_imposition +
-                                   mean_entitlement +
-                                   Gender +
-                          (1 + mean_entitlement  | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>anova(model_reason_full, model_reason_no_entitlement)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_reason_no_entitlement: factor(reason_final) ~ mean_power + mean_imposition + mean_distance + 
-## model_reason_no_entitlement:     Gender + (1 + mean_entitlement | subject) + (1 + mean_entitlement | 
-## model_reason_no_entitlement:     stimNum)
-## model_reason_full: factor(reason_final) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_reason_full:     mean_distance + Gender + (1 + mean_entitlement | subject) + 
-## model_reason_full:     (1 + mean_entitlement | stimNum)
-##                             Df    AIC    BIC  logLik deviance Chisq Chi Df
-## model_reason_no_entitlement 11 515.04 559.30 -246.52   493.04             
-## model_reason_full           12 515.30 563.58 -245.65   491.30 1.741      1
-##                             Pr(&gt;Chisq)
-## model_reason_no_entitlement           
-## model_reason_full                0.187</code></pre>
-<pre class="r"><code>anova(model_reason_full, model_reason_no_power)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_reason_no_power: factor(reason_final) ~ mean_entitlement + mean_imposition + mean_distance + 
-## model_reason_no_power:     Gender + (1 + mean_entitlement | subject) + (1 + mean_entitlement | 
-## model_reason_no_power:     stimNum)
-## model_reason_full: factor(reason_final) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_reason_full:     mean_distance + Gender + (1 + mean_entitlement | subject) + 
-## model_reason_full:     (1 + mean_entitlement | stimNum)
-##                       Df    AIC    BIC  logLik deviance  Chisq Chi Df
-## model_reason_no_power 11 522.76 567.02 -250.38   500.76              
-## model_reason_full     12 515.30 563.58 -245.65   491.30 9.4624      1
-##                       Pr(&gt;Chisq)   
-## model_reason_no_power              
-## model_reason_full       0.002097 **
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<pre class="r"><code>anova(model_reason_full, model_reason_no_imposition)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_reason_no_imposition: factor(reason_final) ~ mean_power + mean_entitlement + mean_distance + 
-## model_reason_no_imposition:     Gender + (1 + mean_entitlement | subject) + (1 + mean_entitlement | 
-## model_reason_no_imposition:     stimNum)
-## model_reason_full: factor(reason_final) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_reason_full:     mean_distance + Gender + (1 + mean_entitlement | subject) + 
-## model_reason_full:     (1 + mean_entitlement | stimNum)
-##                            Df    AIC    BIC  logLik deviance Chisq Chi Df
-## model_reason_no_imposition 11 515.95 560.21 -246.97   493.95             
-## model_reason_full          12 515.30 563.58 -245.65   491.30 2.647      1
-##                            Pr(&gt;Chisq)
-## model_reason_no_imposition           
-## model_reason_full              0.1037</code></pre>
-<pre class="r"><code>anova(model_reason_full, model_reason_no_distance)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_reason_no_distance: factor(reason_final) ~ mean_power + mean_imposition + mean_entitlement + 
-## model_reason_no_distance:     Gender + (1 + mean_entitlement | subject) + (1 + mean_entitlement | 
-## model_reason_no_distance:     stimNum)
-## model_reason_full: factor(reason_final) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_reason_full:     mean_distance + Gender + (1 + mean_entitlement | subject) + 
-## model_reason_full:     (1 + mean_entitlement | stimNum)
-##                          Df    AIC    BIC  logLik deviance  Chisq Chi Df
-## model_reason_no_distance 11 516.33 560.59 -247.17   494.33              
-## model_reason_full        12 515.30 563.58 -245.65   491.30 3.0336      1
-##                          Pr(&gt;Chisq)  
-## model_reason_no_distance             
-## model_reason_full           0.08156 .
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-<div id="adjust-for-multiple-comparisons-1" class="section level4">
-<h4>Adjust for multiple comparisons</h4>
-<pre class="r"><code>p1 = anova(model_reason_full, model_reason_no_entitlement)$`Pr(&gt;Chisq)`[2]
-p2 = anova(model_reason_full, model_reason_no_power)$`Pr(&gt;Chisq)`[2]
-p3 = anova(model_reason_full, model_reason_no_imposition)$`Pr(&gt;Chisq)`[2]
-p4 = anova(model_reason_full, model_reason_no_distance)$`Pr(&gt;Chisq)`[2]
-
-p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
-<pre><code>## [1] 0.244672925 0.008389222 0.244672925 0.244672925</code></pre>
-<pre class="r"><code>summary(model_reason_full)</code></pre>
-<pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
-##   Approximation) [glmerMod]
-##  Family: binomial  ( logit )
-## Formula: 
-## factor(reason_final) ~ mean_entitlement + mean_power + mean_imposition +  
-##     mean_distance + Gender + (1 + mean_entitlement | subject) +  
-##     (1 + mean_entitlement | stimNum)
-##    Data: coded_with_norms
-## Control: glmerControl(optimizer = &quot;bobyqa&quot;)
-## 
-##      AIC      BIC   logLik deviance df.resid 
-##    515.3    563.6   -245.7    491.3      401 
-## 
-## Scaled residuals: 
-##     Min      1Q  Median      3Q     Max 
-## -2.4954 -0.6402  0.1319  0.6203  2.4095 
-## 
-## Random effects:
-##  Groups  Name             Variance  Std.Dev.  Corr 
-##  subject (Intercept)      2.346e+01 4.843e+00      
-##          mean_entitlement 5.329e-01 7.300e-01 -0.99
-##  stimNum (Intercept)      1.632e-14 1.277e-07      
-##          mean_entitlement 4.614e-15 6.792e-08 -1.00
-## Number of obs: 413, groups:  subject, 73; stimNum, 6
-## 
-## Fixed effects:
-##                  Estimate Std. Error z value Pr(&gt;|z|)   
-## (Intercept)       -8.7702     4.1198  -2.129  0.03327 * 
-## mean_entitlement   0.5117     0.3882   1.318  0.18743   
-## mean_power         1.0218     0.3317   3.080  0.00207 **
-## mean_imposition    0.5669     0.3559   1.593  0.11117   
-## mean_distance     -0.2810     0.1531  -1.836  0.06639 . 
-## GenderMale        -0.4505     0.5749  -0.784  0.43327   
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Correlation of Fixed Effects:
-##             (Intr) mn_ntt mn_pwr mn_mps mn_dst
-## men_nttlmnt -0.884                            
-## mean_power  -0.703  0.334                     
-## mean_impstn -0.752  0.852  0.142              
-## mean_distnc  0.098 -0.422  0.386 -0.594       
-## GenderMale  -0.668  0.461  0.581  0.382  0.167
-## convergence code: 0
-## boundary (singular) fit: see ?isSingular</code></pre>
-</div>
-</div>
-<div id="repay-2" class="section level3">
-<h3>Repay</h3>
-<pre class="r"><code>model_repay_full = glmer(factor(Just2.ST) ~ mean_entitlement +
-                                   mean_power +
-                                   mean_imposition +
-                                   mean_distance +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_repay_no_entitlement = glmer(factor(Just2.ST) ~  mean_power +
-                                   mean_imposition +
-                                   mean_distance +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_repay_no_power = glmer(factor(Just2.ST) ~  mean_entitlement +
-                                   mean_imposition +
-                                   mean_distance +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_repay_no_imposition = glmer(factor(Just2.ST) ~  mean_power +
-                                   mean_entitlement +
-                                   mean_distance +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_repay_no_distance = glmer(factor(Just2.ST) ~  mean_power +
-                                   mean_imposition +
-                                   mean_entitlement +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>anova(model_repay_full, model_repay_no_entitlement)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_repay_no_entitlement: factor(Just2.ST) ~ mean_power + mean_imposition + mean_distance + 
-## model_repay_no_entitlement:     Gender + (1 | subject) + (1 + mean_entitlement | stimNum)
-## model_repay_full: factor(Just2.ST) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_repay_full:     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement | 
-## model_repay_full:     stimNum)
-##                            Df    AIC    BIC  logLik deviance Chisq Chi Df
-## model_repay_no_entitlement  9 186.11 222.32 -84.057   168.11             
-## model_repay_full           10 187.09 227.33 -83.547   167.09  1.02      1
-##                            Pr(&gt;Chisq)
-## model_repay_no_entitlement           
-## model_repay_full               0.3125</code></pre>
-<pre class="r"><code>anova(model_repay_full, model_repay_no_power)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_repay_no_power: factor(Just2.ST) ~ mean_entitlement + mean_imposition + mean_distance + 
-## model_repay_no_power:     Gender + (1 | subject) + (1 + mean_entitlement | stimNum)
-## model_repay_full: factor(Just2.ST) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_repay_full:     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement | 
-## model_repay_full:     stimNum)
-##                      Df    AIC    BIC  logLik deviance  Chisq Chi Df
-## model_repay_no_power  9 185.25 221.46 -83.623   167.25              
-## model_repay_full     10 187.09 227.33 -83.547   167.09 0.1521      1
-##                      Pr(&gt;Chisq)
-## model_repay_no_power           
-## model_repay_full         0.6965</code></pre>
-<pre class="r"><code>anova(model_repay_full, model_repay_no_imposition)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_repay_no_imposition: factor(Just2.ST) ~ mean_power + mean_entitlement + mean_distance + 
-## model_repay_no_imposition:     Gender + (1 | subject) + (1 + mean_entitlement | stimNum)
-## model_repay_full: factor(Just2.ST) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_repay_full:     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement | 
-## model_repay_full:     stimNum)
-##                           Df    AIC    BIC  logLik deviance  Chisq Chi Df
-## model_repay_no_imposition  9 194.03 230.24 -88.015   176.03              
-## model_repay_full          10 187.09 227.33 -83.547   167.09 8.9366      1
-##                           Pr(&gt;Chisq)   
-## model_repay_no_imposition              
-## model_repay_full            0.002795 **
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<pre class="r"><code>anova(model_repay_full, model_repay_no_distance)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_repay_no_distance: factor(Just2.ST) ~ mean_power + mean_imposition + mean_entitlement + 
-## model_repay_no_distance:     Gender + (1 | subject) + (1 + mean_entitlement | stimNum)
-## model_repay_full: factor(Just2.ST) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_repay_full:     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement | 
-## model_repay_full:     stimNum)
-##                         Df    AIC    BIC  logLik deviance Chisq Chi Df
-## model_repay_no_distance  9 189.85 226.06 -85.923   171.85             
-## model_repay_full        10 187.09 227.33 -83.547   167.09 4.752      1
-##                         Pr(&gt;Chisq)  
-## model_repay_no_distance             
-## model_repay_full           0.02926 *
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<div id="adjust-for-multiple-comparisons-2" class="section level4">
-<h4>Adjust for multiple comparisons</h4>
-<pre class="r"><code>p1 = anova(model_repay_full, model_repay_no_entitlement)$`Pr(&gt;Chisq)`[2]
-p2 = anova(model_repay_full, model_repay_no_power)$`Pr(&gt;Chisq)`[2]
-p3 = anova(model_repay_full, model_repay_no_imposition)$`Pr(&gt;Chisq)`[2]
-p4 = anova(model_repay_full, model_repay_no_distance)$`Pr(&gt;Chisq)`[2]
-
-p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
-<pre><code>## [1] 0.62503395 0.69652111 0.01118054 0.08779033</code></pre>
-<pre class="r"><code>summary(model_repay_full)</code></pre>
-<pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
-##   Approximation) [glmerMod]
-##  Family: binomial  ( logit )
-## Formula: 
-## factor(Just2.ST) ~ mean_entitlement + mean_power + mean_imposition +  
-##     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement |  
-##     stimNum)
-##    Data: coded_with_norms
-## Control: glmerControl(optimizer = &quot;bobyqa&quot;)
-## 
-##      AIC      BIC   logLik deviance df.resid 
-##    187.1    227.3    -83.5    167.1      403 
-## 
-## Scaled residuals: 
-##     Min      1Q  Median      3Q     Max 
-## -0.6673 -0.2068 -0.0252 -0.0046  4.8352 
-## 
-## Random effects:
-##  Groups  Name             Variance  Std.Dev.  Corr
-##  subject (Intercept)      1.355e+00 1.164e+00     
-##  stimNum (Intercept)      0.000e+00 0.000e+00     
-##          mean_entitlement 3.352e-18 1.831e-09  NaN
-## Number of obs: 413, groups:  subject, 73; stimNum, 6
-## 
-## Fixed effects:
-##                  Estimate Std. Error z value Pr(&gt;|z|)   
-## (Intercept)      -25.6409     9.4874  -2.703  0.00688 **
-## mean_entitlement   0.6171     0.5846   1.055  0.29123   
-## mean_power        -0.7842     2.3325  -0.336  0.73671   
-## mean_imposition    3.8178     1.2677   3.012  0.00260 **
-## mean_distance      1.1742     0.8360   1.405  0.16015   
-## GenderMale        -0.7809     0.8942  -0.873  0.38248   
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Correlation of Fixed Effects:
-##             (Intr) mn_ntt mn_pwr mn_mps mn_dst
-## men_nttlmnt -0.759                            
-## mean_power  -0.575  0.495                     
-## mean_impstn -0.176  0.088 -0.684              
-## mean_distnc  0.103 -0.443 -0.724  0.678       
-## GenderMale   0.222  0.046 -0.511  0.317  0.357
-## convergence code: 0
-## boundary (singular) fit: see ?isSingular</code></pre>
-</div>
-</div>
-<div id="descriptive" class="section level3">
-<h3>Descriptive</h3>
-<pre class="r"><code>mean(coded_with_norms$reason_final)</code></pre>
-<pre><code>## [1] 0.5012107</code></pre>
-<pre class="r"><code>mean(coded_with_norms$Just2.ST)</code></pre>
-<pre><code>## [1] 0.08958838</code></pre>
+## EM 0.00539126
+## IS 0.80413037
+## M  0.79336149</code></pre>
 </div>
 </div>
 </div>
@@ -1483,47 +985,11 @@ formatting_kappa = cohen.kappa(formatting_bound)</code></pre>
 ## 
 ##  Number of subjects = 155</code></pre>
 </div>
-<div id="reason-3" class="section level3">
-<h3>Reason</h3>
-<pre class="r"><code>coded.reduced$agree_reason = coded.reduced$Reason.SB == coded.reduced$Reason2
-mean(coded.reduced$agree_reason)</code></pre>
-<pre><code>## [1] 0.8387097</code></pre>
-<pre class="r"><code>preface_bound = cbind(coded.reduced$Reason.SB, coded.reduced$Reason2)
-preface_kappa = cohen.kappa(preface_bound)</code></pre>
-<pre><code>## Warning in any(abs(bounds)): coercing argument of type 'double' to logical</code></pre>
-<pre class="r"><code>preface_kappa</code></pre>
-<pre><code>## Call: cohen.kappa1(x = x, w = w, n.obs = n.obs, alpha = alpha, levels = levels)
-## 
-## Cohen Kappa and Weighted Kappa correlation coefficients and confidence boundaries 
-##                  lower estimate upper
-## unweighted kappa  0.54     0.65  0.77
-## weighted kappa    0.54     0.65  0.77
-## 
-##  Number of subjects = 155</code></pre>
-</div>
-<div id="repay-3" class="section level3">
-<h3>Repay</h3>
-<pre class="r"><code>coded.reduced$agree_repay = coded.reduced$Repayment.SB == coded.reduced$Repayment2
-mean(coded.reduced$agree_repay, na.rm=TRUE)</code></pre>
-<pre><code>## [1] 1</code></pre>
-<pre class="r"><code>preface_bound = cbind(coded.reduced$Repayment.SB, coded.reduced$Repayment2)
-preface_kappa = cohen.kappa(preface_bound)</code></pre>
-<pre><code>## Warning in any(abs(bounds)): coercing argument of type 'double' to logical</code></pre>
-<pre class="r"><code>preface_kappa</code></pre>
-<pre><code>## Call: cohen.kappa1(x = x, w = w, n.obs = n.obs, alpha = alpha, levels = levels)
-## 
-## Cohen Kappa and Weighted Kappa correlation coefficients and confidence boundaries 
-##                  lower estimate upper
-## unweighted kappa     1        1     1
-## weighted kappa       1        1     1
-## 
-##  Number of subjects = 154</code></pre>
-</div>
 </div>
 <div id="formatting-entitlement-1" class="section level2">
 <h2>Formatting ~ Entitlement</h2>
 <pre class="r"><code>model_full = glmer(data = coded_with_norms,
-                  formatting ~ condition + Gender+
+                  formatting ~ condition + Gender +
                     (1 + condition | subject) + (1 + condition | stimNum),
                         control=glmerControl(optimizer=&quot;bobyqa&quot;),
                         family=binomial)
@@ -1546,6 +1012,44 @@ anova(model_full, model_reduced)</code></pre>
 ## model_full     9 504.02 540.53 -243.01   486.02 2.9369      1    0.08657 .
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<div id="use-multinomial-regression-to-extract-weights-2" class="section level3">
+<h3>Use multinomial regression to extract weights</h3>
+<pre class="r"><code>model_formatting_full = multinom(formatting ~ condition +
+                              Gender,
+                        data = coded_with_norms)</code></pre>
+<pre><code>## # weights:  16 (9 variable)
+## initial  value 591.947692 
+## iter  10 value 413.640944
+## final  value 412.872410 
+## converged</code></pre>
+<pre class="r"><code>z &lt;- summary(model_formatting_full)$coefficients/summary(model_formatting_full)$standard.errors
+# 2-tailed Wald z tests to test significance of coefficients
+p &lt;- (1 - pnorm(abs(z), 0, 1)) * 2
+
+summary(model_formatting_full)</code></pre>
+<pre><code>## Call:
+## multinom(formula = formatting ~ condition + Gender, data = coded_with_norms)
+## 
+## Coefficients:
+##     (Intercept) conditionlow GenderMale
+## IS -3.060748591   -1.0876814 -0.3397464
+## M   0.004005455    0.4685573 -0.2415300
+## EM -2.043942075    1.1967476 -0.3485054
+## 
+## Std. Errors:
+##    (Intercept) conditionlow GenderMale
+## IS   0.7544001    1.1280788  0.9276144
+## M    0.2004238    0.2061147  0.2167845
+## EM   0.3892244    0.3877712  0.3722328
+## 
+## Residual Deviance: 825.7448 
+## AIC: 843.7448</code></pre>
+<pre class="r"><code>p</code></pre>
+<pre><code>##     (Intercept) conditionlow GenderMale
+## IS 4.966557e-05  0.334951116  0.7141724
+## M  9.840554e-01  0.023009065  0.2652159
+## EM 1.510124e-07  0.002027179  0.3491411</code></pre>
+</div>
 </div>
 <div id="formatting-entitlement-norms-1" class="section level2">
 <h2>Formatting ~ Entitlement Norms</h2>
@@ -1662,7 +1166,7 @@ anova(model_full, model_reduced)</code></pre>
 ##                              Chi Df Pr(&gt;Chisq)
 ## model_formatting_no_distance                  
 ## model_formatting_full             1     0.1314</code></pre>
-<div id="adjust-for-multiple-comparisons-3" class="section level3">
+<div id="adjust-for-multiple-comparisons-1" class="section level3">
 <h3>Adjust for multiple comparisons</h3>
 <pre class="r"><code>p1 = anova(model_formatting_full, model_formatting_no_entitlement)$`Pr(&gt;Chisq)`[2]
 p2 = anova(model_formatting_full, model_formatting_no_power)$`Pr(&gt;Chisq)`[2]
@@ -1672,7 +1176,7 @@ p4 = anova(model_formatting_full, model_formatting_no_distance)$`Pr(&gt;Chisq)`[
 p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
 <pre><code>## [1] 9.501691e-02 5.481725e-05 5.481725e-05 1.313540e-01</code></pre>
 </div>
-<div id="use-multinomial-regression-to-extract-weights-1" class="section level3">
+<div id="use-multinomial-regression-to-extract-weights-3" class="section level3">
 <h3>Use multinomial regression to extract weights</h3>
 <pre class="r"><code>model_formatting_full = multinom(formatting ~ mean_entitlement +
                               mean_power +
@@ -1730,422 +1234,6 @@ summary(model_formatting_full)</code></pre>
 ## IS  0.5212477
 ## M   0.2826494
 ## EM  0.3681545</code></pre>
-</div>
-<div id="reason-4" class="section level3">
-<h3>Reason</h3>
-<pre class="r"><code>model_reason_full = glmer(factor(Reason2) ~ condition +
-                                   Gender + 
-                          (1 + condition | subject) +
-                          (1 + condition | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_reason_no_entitlement = glmer(factor(Reason2) ~ Gender +
-                          (1 + condition | subject) +
-                          (1 + condition | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>anova(model_reason_full, model_reason_no_entitlement)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_reason_no_entitlement: factor(Reason2) ~ Gender + (1 + condition | subject) + (1 + condition | 
-## model_reason_no_entitlement:     stimNum)
-## model_reason_full: factor(Reason2) ~ condition + Gender + (1 + condition | subject) + 
-## model_reason_full:     (1 + condition | stimNum)
-##                             Df    AIC    BIC  logLik deviance  Chisq
-## model_reason_no_entitlement  8 432.03 464.49 -208.02   416.03       
-## model_reason_full            9 430.91 467.42 -206.46   412.91 3.1227
-##                             Chi Df Pr(&gt;Chisq)  
-## model_reason_no_entitlement                    
-## model_reason_full                1    0.07721 .
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-<div id="repay-4" class="section level3">
-<h3>Repay</h3>
-<pre class="r"><code>model_repay_full = glmer(factor(Repayment2) ~ condition +
-                                   Gender + 
-                          (1 + condition | subject) +
-                          (1 + condition | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl =
-## control$checkConv, : Model failed to converge with max|grad| = 0.0273518
-## (tol = 0.001, component 1)</code></pre>
-<pre class="r"><code>model_repay_no_entitlement = glmer(factor(Repayment2) ~ Gender +
-                          (1 + condition | subject) +
-                          (1 + condition | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>anova(model_repay_full, model_repay_no_entitlement)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_repay_no_entitlement: factor(Repayment2) ~ Gender + (1 + condition | subject) + (1 + 
-## model_repay_no_entitlement:     condition | stimNum)
-## model_repay_full: factor(Repayment2) ~ condition + Gender + (1 + condition | subject) + 
-## model_repay_full:     (1 + condition | stimNum)
-##                            Df     AIC    BIC  logLik deviance  Chisq
-## model_repay_no_entitlement  8 109.259 141.71 -46.629   93.259       
-## model_repay_full            9  97.968 134.48 -39.984   79.968 13.291
-##                            Chi Df Pr(&gt;Chisq)    
-## model_repay_no_entitlement                      
-## model_repay_full                1  0.0002667 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-</div>
-</div>
-<div id="justification-entitlement-norms-1" class="section level2">
-<h2>Justification ~ Entitlement Norms</h2>
-<div id="reason-5" class="section level3">
-<h3>Reason</h3>
-<pre class="r"><code>model_reason_full = glmer(factor(Reason2) ~ mean_entitlement +
-                                   mean_power +
-                                   mean_imposition +
-                                   mean_distance +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_reason_no_entitlement = glmer(factor(Reason2) ~  mean_power +
-                                   mean_imposition +
-                                   mean_distance +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_reason_no_power = glmer(factor(Reason2) ~  mean_entitlement +
-                                   mean_imposition +
-                                   mean_distance +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_reason_no_imposition = glmer(factor(Reason2) ~  mean_power +
-                                   mean_entitlement +
-                                   mean_distance +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_reason_no_distance = glmer(factor(Reason2) ~  mean_power +
-                                   mean_imposition +
-                                   mean_entitlement +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>anova(model_reason_full, model_reason_no_entitlement)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_reason_no_entitlement: factor(Reason2) ~ mean_power + mean_imposition + mean_distance + 
-## model_reason_no_entitlement:     Gender + (1 | subject) + (1 + mean_entitlement | stimNum)
-## model_reason_full: factor(Reason2) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_reason_full:     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement | 
-## model_reason_full:     stimNum)
-##                             Df    AIC    BIC  logLik deviance  Chisq
-## model_reason_no_entitlement  9 425.01 461.52 -203.51   407.01       
-## model_reason_full           10 426.75 467.32 -203.37   406.75 0.2646
-##                             Chi Df Pr(&gt;Chisq)
-## model_reason_no_entitlement                  
-## model_reason_full                1      0.607</code></pre>
-<pre class="r"><code>anova(model_reason_full, model_reason_no_power)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_reason_no_power: factor(Reason2) ~ mean_entitlement + mean_imposition + mean_distance + 
-## model_reason_no_power:     Gender + (1 | subject) + (1 + mean_entitlement | stimNum)
-## model_reason_full: factor(Reason2) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_reason_full:     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement | 
-## model_reason_full:     stimNum)
-##                       Df    AIC    BIC  logLik deviance  Chisq Chi Df
-## model_reason_no_power  9 433.39 469.90 -207.69   415.39              
-## model_reason_full     10 426.75 467.32 -203.37   406.75 8.6415      1
-##                       Pr(&gt;Chisq)   
-## model_reason_no_power              
-## model_reason_full       0.003286 **
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<pre class="r"><code>anova(model_reason_full, model_reason_no_imposition)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_reason_no_imposition: factor(Reason2) ~ mean_power + mean_entitlement + mean_distance + 
-## model_reason_no_imposition:     Gender + (1 | subject) + (1 + mean_entitlement | stimNum)
-## model_reason_full: factor(Reason2) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_reason_full:     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement | 
-## model_reason_full:     stimNum)
-##                            Df    AIC    BIC  logLik deviance  Chisq Chi Df
-## model_reason_no_imposition  9 429.31 465.82 -205.66   411.31              
-## model_reason_full          10 426.75 467.32 -203.37   406.75 4.5648      1
-##                            Pr(&gt;Chisq)  
-## model_reason_no_imposition             
-## model_reason_full             0.03263 *
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<pre class="r"><code>anova(model_reason_full, model_reason_no_distance)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_reason_no_distance: factor(Reason2) ~ mean_power + mean_imposition + mean_entitlement + 
-## model_reason_no_distance:     Gender + (1 | subject) + (1 + mean_entitlement | stimNum)
-## model_reason_full: factor(Reason2) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_reason_full:     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement | 
-## model_reason_full:     stimNum)
-##                          Df    AIC    BIC  logLik deviance  Chisq Chi Df
-## model_reason_no_distance  9 427.19 463.70 -204.60   409.19              
-## model_reason_full        10 426.75 467.32 -203.37   406.75 2.4429      1
-##                          Pr(&gt;Chisq)
-## model_reason_no_distance           
-## model_reason_full            0.1181</code></pre>
-<div id="adjust-for-multiple-comparisons-4" class="section level4">
-<h4>Adjust for multiple comparisons</h4>
-<pre class="r"><code>p1 = anova(model_reason_full, model_reason_no_entitlement)$`Pr(&gt;Chisq)`[2]
-p2 = anova(model_reason_full, model_reason_no_power)$`Pr(&gt;Chisq)`[2]
-p3 = anova(model_reason_full, model_reason_no_imposition)$`Pr(&gt;Chisq)`[2]
-p4 = anova(model_reason_full, model_reason_no_distance)$`Pr(&gt;Chisq)`[2]
-
-p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
-<pre><code>## [1] 0.60696833 0.01314353 0.09790376 0.23611632</code></pre>
-<pre class="r"><code>summary(model_reason_full)</code></pre>
-<pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
-##   Approximation) [glmerMod]
-##  Family: binomial  ( logit )
-## Formula: 
-## factor(Reason2) ~ mean_entitlement + mean_power + mean_imposition +  
-##     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement |  
-##     stimNum)
-##    Data: coded_with_norms
-## Control: glmerControl(optimizer = &quot;bobyqa&quot;)
-## 
-##      AIC      BIC   logLik deviance df.resid 
-##    426.7    467.3   -203.4    406.7      417 
-## 
-## Scaled residuals: 
-##     Min      1Q  Median      3Q     Max 
-## -3.9330 -0.3382  0.1829  0.4401  3.1722 
-## 
-## Random effects:
-##  Groups  Name             Variance Std.Dev. Corr 
-##  subject (Intercept)        2.815   1.678        
-##  stimNum (Intercept)      374.925  19.363        
-##          mean_entitlement  12.588   3.548   -1.00
-## Number of obs: 427, groups:  subject, 72; stimNum, 6
-## 
-## Fixed effects:
-##                  Estimate Std. Error z value Pr(&gt;|z|)   
-## (Intercept)      -33.1340    10.1925  -3.251  0.00115 **
-## mean_entitlement   0.9676     1.7660   0.548  0.58376   
-## mean_power         3.3390     1.0175   3.282  0.00103 **
-## mean_imposition    2.9002     1.1034   2.628  0.00858 **
-## mean_distance      0.2033     0.2621   0.775  0.43812   
-## GenderMale         0.4243     0.5333   0.796  0.42620   
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Correlation of Fixed Effects:
-##             (Intr) mn_ntt mn_pwr mn_mps mn_dst
-## men_nttlmnt -0.854                            
-## mean_power  -0.027 -0.411                     
-## mean_impstn -0.476  0.281 -0.232              
-## mean_distnc  0.024  0.207 -0.277 -0.434       
-## GenderMale  -0.160  0.047  0.043  0.182 -0.080
-## convergence code: 0
-## boundary (singular) fit: see ?isSingular</code></pre>
-</div>
-</div>
-<div id="repay-5" class="section level3">
-<h3>Repay</h3>
-<pre class="r"><code>model_repay_full = glmer(factor(Repayment2) ~ mean_entitlement +
-                                   mean_power +
-                                   mean_imposition +
-                                   mean_distance +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_repay_no_entitlement = glmer(factor(Repayment2) ~  mean_power +
-                                   mean_imposition +
-                                   mean_distance +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_repay_no_power = glmer(factor(Repayment2) ~  mean_entitlement +
-                                   mean_imposition +
-                                   mean_distance +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_repay_no_imposition = glmer(factor(Repayment2) ~  mean_power +
-                                   mean_entitlement +
-                                   mean_distance +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>model_repay_no_distance = glmer(factor(Repayment2) ~  mean_power +
-                                   mean_imposition +
-                                   mean_entitlement +
-                                   Gender + 
-                          (1 | subject) +
-                          (1 + mean_entitlement | stimNum),
-                        data = coded_with_norms, 
-                        control=glmerControl(optimizer=&quot;bobyqa&quot;),
-                        family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
-<pre class="r"><code>anova(model_repay_full, model_repay_no_entitlement)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_repay_no_entitlement: factor(Repayment2) ~ mean_power + mean_imposition + mean_distance + 
-## model_repay_no_entitlement:     Gender + (1 | subject) + (1 + mean_entitlement | stimNum)
-## model_repay_full: factor(Repayment2) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_repay_full:     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement | 
-## model_repay_full:     stimNum)
-##                            Df     AIC    BIC  logLik deviance  Chisq
-## model_repay_no_entitlement  9  98.237 134.75 -40.118   80.237       
-## model_repay_full           10 100.126 140.69 -40.063   80.126 0.1108
-##                            Chi Df Pr(&gt;Chisq)
-## model_repay_no_entitlement                  
-## model_repay_full                1     0.7393</code></pre>
-<pre class="r"><code>anova(model_repay_full, model_repay_no_power)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_repay_no_power: factor(Repayment2) ~ mean_entitlement + mean_imposition + mean_distance + 
-## model_repay_no_power:     Gender + (1 | subject) + (1 + mean_entitlement | stimNum)
-## model_repay_full: factor(Repayment2) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_repay_full:     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement | 
-## model_repay_full:     stimNum)
-##                      Df     AIC    BIC  logLik deviance  Chisq Chi Df
-## model_repay_no_power  9  99.602 136.11 -40.801   81.602              
-## model_repay_full     10 100.126 140.69 -40.063   80.126 1.4759      1
-##                      Pr(&gt;Chisq)
-## model_repay_no_power           
-## model_repay_full         0.2244</code></pre>
-<pre class="r"><code>anova(model_repay_full, model_repay_no_imposition)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_repay_no_imposition: factor(Repayment2) ~ mean_power + mean_entitlement + mean_distance + 
-## model_repay_no_imposition:     Gender + (1 | subject) + (1 + mean_entitlement | stimNum)
-## model_repay_full: factor(Repayment2) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_repay_full:     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement | 
-## model_repay_full:     stimNum)
-##                           Df    AIC    BIC  logLik deviance  Chisq Chi Df
-## model_repay_no_imposition  9 103.42 139.93 -42.708   85.417              
-## model_repay_full          10 100.13 140.69 -40.063   80.126 5.2906      1
-##                           Pr(&gt;Chisq)  
-## model_repay_no_imposition             
-## model_repay_full             0.02144 *
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<pre class="r"><code>anova(model_repay_full, model_repay_no_distance)</code></pre>
-<pre><code>## Data: coded_with_norms
-## Models:
-## model_repay_no_distance: factor(Repayment2) ~ mean_power + mean_imposition + mean_entitlement + 
-## model_repay_no_distance:     Gender + (1 | subject) + (1 + mean_entitlement | stimNum)
-## model_repay_full: factor(Repayment2) ~ mean_entitlement + mean_power + mean_imposition + 
-## model_repay_full:     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement | 
-## model_repay_full:     stimNum)
-##                         Df    AIC    BIC  logLik deviance Chisq Chi Df
-## model_repay_no_distance  9 107.48 143.99 -44.738   89.476             
-## model_repay_full        10 100.13 140.69 -40.063   80.126  9.35      1
-##                         Pr(&gt;Chisq)   
-## model_repay_no_distance              
-## model_repay_full           0.00223 **
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<div id="adjust-for-multiple-comparisons-5" class="section level4">
-<h4>Adjust for multiple comparisons</h4>
-<pre class="r"><code>p1 = anova(model_repay_full, model_repay_no_entitlement)$`Pr(&gt;Chisq)`[2]
-p2 = anova(model_repay_full, model_repay_no_power)$`Pr(&gt;Chisq)`[2]
-p3 = anova(model_repay_full, model_repay_no_imposition)$`Pr(&gt;Chisq)`[2]
-p4 = anova(model_repay_full, model_repay_no_distance)$`Pr(&gt;Chisq)`[2]
-
-p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
-<pre><code>## [1] 0.739274046 0.448846981 0.064323772 0.008919652</code></pre>
-<pre class="r"><code>summary(model_repay_full)</code></pre>
-<pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
-##   Approximation) [glmerMod]
-##  Family: binomial  ( logit )
-## Formula: 
-## factor(Repayment2) ~ mean_entitlement + mean_power + mean_imposition +  
-##     mean_distance + Gender + (1 | subject) + (1 + mean_entitlement |  
-##     stimNum)
-##    Data: coded_with_norms
-## Control: glmerControl(optimizer = &quot;bobyqa&quot;)
-## 
-##      AIC      BIC   logLik deviance df.resid 
-##    100.1    140.7    -40.1     80.1      417 
-## 
-## Scaled residuals: 
-##     Min      1Q  Median      3Q     Max 
-## -0.5621 -0.1148 -0.0854 -0.0308 10.4491 
-## 
-## Random effects:
-##  Groups  Name             Variance Std.Dev.  Corr 
-##  subject (Intercept)      0.00e+00 0.000e+00      
-##  stimNum (Intercept)      1.45e-08 1.204e-04      
-##          mean_entitlement 7.28e-10 2.698e-05 -1.00
-## Number of obs: 427, groups:  subject, 72; stimNum, 6
-## 
-## Fixed effects:
-##                  Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)        5.9172    12.1063   0.489 0.625008    
-## mean_entitlement  -0.5687     1.6501  -0.345 0.730353    
-## mean_power        -2.5088     2.2246  -1.128 0.259426    
-## mean_imposition    3.1939     1.7472   1.828 0.067552 .  
-## mean_distance     -1.7855     0.5103  -3.499 0.000467 ***
-## GenderMale        -0.5676     0.6331  -0.897 0.369938    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Correlation of Fixed Effects:
-##             (Intr) mn_ntt mn_pwr mn_mps mn_dst
-## men_nttlmnt -0.737                            
-## mean_power  -0.344 -0.363                     
-## mean_impstn -0.249  0.751 -0.783              
-## mean_distnc -0.329 -0.072  0.661 -0.650       
-## GenderMale  -0.096 -0.001  0.095 -0.029 -0.031
-## convergence code: 0
-## boundary (singular) fit: see ?isSingular</code></pre>
-</div>
-</div>
-<div id="descriptive-1" class="section level3">
-<h3>Descriptive</h3>
-<pre class="r"><code>mean(coded_with_norms$Reason2)</code></pre>
-<pre><code>## [1] 0.5807963</code></pre>
-<pre class="r"><code>mean(coded_with_norms$Repayment2)</code></pre>
-<pre><code>## [1] 0.02810304</code></pre>
 </div>
 </div>
 </div>
@@ -2205,6 +1293,44 @@ mean(df_rt$total_minutes)</code></pre>
 ## model_full    **
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<div id="use-multinomial-regression-to-extract-weights-4" class="section level3">
+<h3>Use multinomial regression to extract weights</h3>
+<pre class="r"><code>model_formatting_full = multinom(formatting ~ condition +
+                              Gender,
+                        data = coded_with_norms)</code></pre>
+<pre><code>## # weights:  16 (9 variable)
+## initial  value 896.932452 
+## iter  10 value 840.619334
+## final  value 835.275943 
+## converged</code></pre>
+<pre class="r"><code>z &lt;- summary(model_formatting_full)$coefficients/summary(model_formatting_full)$standard.errors
+# 2-tailed Wald z tests to test significance of coefficients
+p &lt;- (1 - pnorm(abs(z), 0, 1)) * 2
+
+summary(model_formatting_full)</code></pre>
+<pre><code>## Call:
+## multinom(formula = formatting ~ condition + Gender, data = coded_with_norms)
+## 
+## Coefficients:
+##    (Intercept) conditionlow GenderMale
+## EM  -0.1480024     1.438370 -0.1887615
+## IS  -1.0030294     1.318023 -0.2656219
+## M    0.1143737     0.923295 -0.2107633
+## 
+## Std. Errors:
+##    (Intercept) conditionlow GenderMale
+## EM   0.1995689    0.2320562  0.2264156
+## IS   0.2577485    0.2918650  0.2857290
+## M    0.1913315    0.2311192  0.2236400
+## 
+## Residual Deviance: 1670.552 
+## AIC: 1688.552</code></pre>
+<pre class="r"><code>p</code></pre>
+<pre><code>##     (Intercept) conditionlow GenderMale
+## EM 4.583233e-01 5.705052e-10  0.4044531
+## IS 9.962487e-05 6.305941e-06  0.3525632
+## M  5.499883e-01 6.472516e-05  0.3459767</code></pre>
+</div>
 </div>
 <div id="formatting-entitlement-norms-2" class="section level2">
 <h2>Formatting ~ Entitlement Norms</h2>
@@ -2307,7 +1433,7 @@ mean(df_rt$total_minutes)</code></pre>
 ##                        Pr(&gt;Chisq)
 ## model_full_no_distance           
 ## model_full_all_norms         0.88</code></pre>
-<div id="adjust-for-multiple-comparisons-6" class="section level3">
+<div id="adjust-for-multiple-comparisons-2" class="section level3">
 <h3>Adjust for multiple comparisons</h3>
 <pre class="r"><code>p1 = anova(model_full_all_norms, model_full_no_entitlement)$`Pr(&gt;Chisq)`[2]
 p2 = anova(model_full_all_norms, model_full_no_power)$`Pr(&gt;Chisq)`[2]
@@ -2317,7 +1443,7 @@ p4 = anova(model_full_all_norms, model_full_no_distance)$`Pr(&gt;Chisq)`[2]
 p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
 <pre><code>## [1] 0.002080336 0.420812604 0.541638355 0.879950759</code></pre>
 </div>
-<div id="use-multinomial-regression-to-extract-weights-2" class="section level3">
+<div id="use-multinomial-regression-to-extract-weights-5" class="section level3">
 <h3>Use multinomial regression to extract weights</h3>
 <pre class="r"><code>model_formatting_full = multinom(formatting ~ condition +
                                    Gender,
@@ -2519,6 +1645,106 @@ model_full_all = lmer(judgment ~ format_reordered*entitlement_reordered +
                            control=lmerControl(optimizer=&quot;bobyqa&quot;),
                            REML=FALSE)</code></pre>
 <pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
+<pre class="r"><code>model_no_formatting = lmer(judgment ~ entitlement_reordered + 
+                              Gender +
+                             (1+condition| subject) + 
+                              (1 + condition | stimNum) +
+                             (1 + condition | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer=&quot;bobyqa&quot;),
+                           REML=FALSE)</code></pre>
+<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
+<pre class="r"><code>model_no_entitlement = lmer(judgment ~ formatting + 
+                              Gender +
+                             (1+condition| subject) + 
+                              (1 + condition | stimNum) +
+                             (1 + condition | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer=&quot;bobyqa&quot;),
+                           REML=FALSE)
+
+summary(model_full_all)</code></pre>
+<pre><code>## Linear mixed model fit by maximum likelihood . t-tests use
+##   Satterthwaite's method [lmerModLmerTest]
+## Formula: judgment ~ format_reordered * entitlement_reordered + Gender +  
+##     (1 + condition | subject) + (1 + condition | stimNum) + (1 +  
+##     condition | group)
+##    Data: coded_with_norms
+## Control: lmerControl(optimizer = &quot;bobyqa&quot;)
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##   6231.2   6333.9  -3096.6   6193.2     1632 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.6397 -0.5366  0.1946  0.7014  2.3303 
+## 
+## Random effects:
+##  Groups   Name         Variance Std.Dev. Corr 
+##  subject  (Intercept)  0.374357 0.61185       
+##           conditionlow 0.055075 0.23468  0.21 
+##  stimNum  (Intercept)  0.046306 0.21519       
+##           conditionlow 0.015688 0.12525  -0.01
+##  group    (Intercept)  0.013475 0.11608       
+##           conditionlow 0.002848 0.05336  1.00 
+##  Residual              2.249722 1.49991       
+## Number of obs: 1651, groups:  subject, 104; stimNum, 8; group, 4
+## 
+## Fixed effects:
+##                                                      Estimate Std. Error
+## (Intercept)                                         4.612e-01  2.011e-01
+## format_reordereddirect                             -1.446e+00  1.484e-01
+## format_reorderedindirect                           -1.207e+00  1.479e-01
+## format_reorderedmodal                              -2.435e-01  1.477e-01
+## entitlement_reorderedhigh                          -3.731e-02  1.583e-01
+## GenderMale                                         -5.139e-03  1.547e-01
+## format_reordereddirect:entitlement_reorderedhigh    1.003e+00  2.094e-01
+## format_reorderedindirect:entitlement_reorderedhigh  6.724e-01  2.088e-01
+## format_reorderedmodal:entitlement_reorderedhigh     5.536e-01  2.087e-01
+##                                                            df t value
+## (Intercept)                                         2.141e+01   2.294
+## format_reordereddirect                              1.435e+03  -9.743
+## format_reorderedindirect                            1.431e+03  -8.161
+## format_reorderedmodal                               1.432e+03  -1.648
+## entitlement_reorderedhigh                           5.719e+01  -0.236
+## GenderMale                                          1.038e+02  -0.033
+## format_reordereddirect:entitlement_reorderedhigh    1.437e+03   4.791
+## format_reorderedindirect:entitlement_reorderedhigh  1.433e+03   3.220
+## format_reorderedmodal:entitlement_reorderedhigh     1.434e+03   2.653
+##                                                    Pr(&gt;|t|)    
+## (Intercept)                                         0.03201 *  
+## format_reordereddirect                              &lt; 2e-16 ***
+## format_reorderedindirect                           7.19e-16 ***
+## format_reorderedmodal                               0.09962 .  
+## entitlement_reorderedhigh                           0.81453    
+## GenderMale                                          0.97357    
+## format_reordereddirect:entitlement_reorderedhigh   1.83e-06 ***
+## format_reorderedindirect:entitlement_reorderedhigh  0.00131 ** 
+## format_reorderedmodal:entitlement_reorderedhigh     0.00808 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Correlation of Fixed Effects:
+##               (Intr) frmt_rrdrdd frmt_rrdrdn frmt_rrdrdm enttl_ GndrMl
+## frmt_rrdrdd   -0.369                                                  
+## frmt_rrdrdn   -0.370  0.501                                           
+## frmt_rrdrdm   -0.370  0.502       0.503                               
+## enttlmnt_rr   -0.502  0.468       0.469       0.470                   
+## GenderMale    -0.492 -0.001       0.000       0.000      -0.002       
+## frmt_rrdrdd:_  0.260 -0.708      -0.355      -0.355      -0.660  0.001
+## frmt_rrdrdn:_  0.261 -0.355      -0.708      -0.356      -0.661  0.001
+## frmt_rrdrdm:_  0.262 -0.355      -0.356      -0.707      -0.662  0.000
+##               frmt_rrdrdd:_ frmt_rrdrdn:_
+## frmt_rrdrdd                              
+## frmt_rrdrdn                              
+## frmt_rrdrdm                              
+## enttlmnt_rr                              
+## GenderMale                               
+## frmt_rrdrdd:_                            
+## frmt_rrdrdn:_  0.500                     
+## frmt_rrdrdm:_  0.500         0.501       
+## convergence code: 0
+## boundary (singular) fit: see ?isSingular</code></pre>
 <pre class="r"><code>anova(model_full_all, model_no_interaction)</code></pre>
 <pre><code>## Data: coded_with_norms
 ## Models:
@@ -2534,6 +1760,38 @@ model_full_all = lmer(judgment ~ format_reordered*entitlement_reordered +
 ##                      Pr(&gt;Chisq)    
 ## model_no_interaction               
 ## model_full_all        2.976e-05 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<pre class="r"><code>anova(model_no_interaction, model_no_formatting)</code></pre>
+<pre><code>## Data: coded_with_norms
+## Models:
+## model_no_formatting: judgment ~ entitlement_reordered + Gender + (1 + condition | 
+## model_no_formatting:     subject) + (1 + condition | stimNum) + (1 + condition | group)
+## model_no_interaction: judgment ~ formatting + entitlement_reordered + Gender + (1 + 
+## model_no_interaction:     condition | subject) + (1 + condition | stimNum) + (1 + condition | 
+## model_no_interaction:     group)
+##                      Df    AIC    BIC  logLik deviance  Chisq Chi Df
+## model_no_formatting  13 6389.1 6459.4 -3181.5   6363.1              
+## model_no_interaction 16 6248.8 6335.3 -3108.4   6216.8 146.27      3
+##                      Pr(&gt;Chisq)    
+## model_no_formatting                
+## model_no_interaction  &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<pre class="r"><code>anova(model_no_interaction, model_no_entitlement)</code></pre>
+<pre><code>## Data: coded_with_norms
+## Models:
+## model_no_entitlement: judgment ~ formatting + Gender + (1 + condition | subject) + 
+## model_no_entitlement:     (1 + condition | stimNum) + (1 + condition | group)
+## model_no_interaction: judgment ~ formatting + entitlement_reordered + Gender + (1 + 
+## model_no_interaction:     condition | subject) + (1 + condition | stimNum) + (1 + condition | 
+## model_no_interaction:     group)
+##                      Df    AIC    BIC  logLik deviance  Chisq Chi Df
+## model_no_entitlement 15 6257.2 6338.4 -3113.6   6227.2              
+## model_no_interaction 16 6248.8 6335.3 -3108.4   6216.8 10.451      1
+##                      Pr(&gt;Chisq)   
+## model_no_entitlement              
+## model_no_interaction   0.001226 **
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div id="model-comparisons-for-effect-of-entitlement" class="section level3">
@@ -2790,7 +2048,7 @@ anova(model_full_all_norms, model_no_distance_interaction)</code></pre>
 ##                               Chi Df Pr(&gt;Chisq)
 ## model_no_distance                              
 ## model_no_distance_interaction      1     0.1954</code></pre>
-<div id="adjust-for-multiple-comparisons-7" class="section level4">
+<div id="adjust-for-multiple-comparisons-3" class="section level4">
 <h4>Adjust for multiple comparisons</h4>
 <p>After adjusting for multiple comparisons, we see significant effects of:</p>
 <p>The interaction between <em>entitlement</em> and <em>formatting</em>. The interaction between <em>social distance</em> and <em>formatting</em>.</p>
