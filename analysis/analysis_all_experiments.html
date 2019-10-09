@@ -576,23 +576,21 @@ summary(m1_distance)</code></pre>
 ##   stimNum = col_integer(),
 ##   rt = col_integer(),
 ##   trial_index = col_integer(),
-##   time_elapsed = col_integer(),
 ##   subject = col_integer(),
-##   surveyCode = col_integer(),
-##   Preface.ST = col_integer(),
-##   Contingencies.ST = col_integer(),
-##   Preface2.ST = col_integer(),
-##   Contingencies2.ST = col_integer(),
 ##   Just1.ST = col_integer(),
 ##   Just2.ST = col_integer(),
 ##   Age = col_integer(),
-##   Preface.AL = col_integer(),
-##   Contingencies.AL = col_integer(),
 ##   Reason.SB = col_integer(),
 ##   Repayment.SB = col_integer(),
-##   Contingencies.SB = col_integer(),
-##   length = col_integer()
-##   # ... with 11 more columns
+##   Reason.JV = col_integer(),
+##   mean_entitlement = col_double(),
+##   sd_entitlement = col_double(),
+##   mean_imposition = col_double(),
+##   sd_imposition = col_double(),
+##   mean_power = col_double(),
+##   sd_power = col_double(),
+##   mean_distance = col_double(),
+##   sd_distance = col_double()
 ## )</code></pre>
 <pre><code>## See spec(...) for full column specifications.</code></pre>
 <pre class="r"><code>coded_with_norms$formatting = factor(coded_with_norms$formatting)</code></pre>
@@ -786,10 +784,10 @@ anova(model_formatting_full, model_formatting_no_entitlement)</code></pre>
 ## model_formatting_full:     (1 | stimNum)
 ##                                 Df    AIC    BIC  logLik deviance  Chisq
 ## model_formatting_no_entitlement  9 396.39 432.60 -189.19   378.39       
-## model_formatting_full           10 397.41 437.64 -188.71   377.41 0.9773
+## model_formatting_full           10 397.41 437.64 -188.71   377.41 0.9763
 ##                                 Chi Df Pr(&gt;Chisq)
 ## model_formatting_no_entitlement                  
-## model_formatting_full                1     0.3229</code></pre>
+## model_formatting_full                1     0.3231</code></pre>
 <pre class="r"><code>anova(model_formatting_full, model_formatting_no_power)</code></pre>
 <pre><code>## Data: coded_with_norms
 ## Models:
@@ -800,10 +798,10 @@ anova(model_formatting_full, model_formatting_no_entitlement)</code></pre>
 ## model_formatting_full:     (1 | stimNum)
 ##                           Df    AIC    BIC  logLik deviance  Chisq Chi Df
 ## model_formatting_no_power  9 396.38 432.59 -189.19   378.38              
-## model_formatting_full     10 397.41 437.64 -188.71   377.41 0.9715      1
+## model_formatting_full     10 397.41 437.64 -188.71   377.41 0.9705      1
 ##                           Pr(&gt;Chisq)
 ## model_formatting_no_power           
-## model_formatting_full         0.3243</code></pre>
+## model_formatting_full         0.3245</code></pre>
 <pre class="r"><code>anova(model_formatting_full, model_formatting_no_imposition)</code></pre>
 <pre><code>## Data: coded_with_norms
 ## Models:
@@ -814,10 +812,10 @@ anova(model_formatting_full, model_formatting_no_entitlement)</code></pre>
 ## model_formatting_full:     (1 | stimNum)
 ##                                Df    AIC    BIC  logLik deviance  Chisq
 ## model_formatting_no_imposition  9 405.08 441.29 -193.54   387.08       
-## model_formatting_full          10 397.41 437.64 -188.71   377.41 9.6737
+## model_formatting_full          10 397.41 437.64 -188.71   377.41 9.6727
 ##                                Chi Df Pr(&gt;Chisq)   
 ## model_formatting_no_imposition                     
-## model_formatting_full               1   0.001869 **
+## model_formatting_full               1    0.00187 **
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre class="r"><code>anova(model_formatting_full, model_formatting_no_distance)</code></pre>
@@ -830,10 +828,10 @@ anova(model_formatting_full, model_formatting_no_entitlement)</code></pre>
 ## model_formatting_full:     (1 | stimNum)
 ##                              Df    AIC    BIC  logLik deviance  Chisq
 ## model_formatting_no_distance  9 403.27 439.48 -192.63   385.27       
-## model_formatting_full        10 397.41 437.64 -188.71   377.41 7.8578
+## model_formatting_full        10 397.41 437.64 -188.71   377.41 7.8569
 ##                              Chi Df Pr(&gt;Chisq)   
 ## model_formatting_no_distance                     
-## model_formatting_full             1    0.00506 **
+## model_formatting_full             1   0.005063 **
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div id="adjust-for-multiple-comparisons" class="section level3">
@@ -844,7 +842,7 @@ p3 = anova(model_formatting_full, model_formatting_no_imposition)$`Pr(&gt;Chisq)
 p4 = anova(model_formatting_full, model_formatting_no_distance)$`Pr(&gt;Chisq)`[2]
 
 p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
-<pre><code>## [1] 0.645723997 0.645723997 0.007477093 0.015180279</code></pre>
+<pre><code>## [1] 0.646226850 0.646226850 0.007481225 0.015188391</code></pre>
 <pre class="r"><code>summary(model_formatting_full)</code></pre>
 <pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
 ##   Approximation) [glmerMod]
@@ -860,23 +858,23 @@ p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -3.9435 -0.4571  0.2022  0.3997  2.2531 
+## -3.9449 -0.4572  0.2023  0.3997  2.2530 
 ## 
 ## Random effects:
 ##  Groups  Name             Variance Std.Dev. Corr 
-##  subject (Intercept)      41.991   6.48          
-##          mean_entitlement  1.233   1.11     -0.98
-##  stimNum (Intercept)       0.000   0.00          
+##  subject (Intercept)      41.957   6.477         
+##          mean_entitlement  1.232   1.110    -0.98
+##  stimNum (Intercept)       0.000   0.000         
 ## Number of obs: 413, groups:  subject, 73; stimNum, 6
 ## 
 ## Fixed effects:
 ##                  Estimate Std. Error z value Pr(&gt;|z|)   
-## (Intercept)       -5.4782     5.1245  -1.069  0.28507   
-## mean_entitlement  -0.5729     0.5813  -0.986  0.32432   
-## mean_power         0.3911     0.4014   0.974  0.32987   
-## mean_imposition    1.3892     0.4758   2.919  0.00351 **
-## mean_distance      0.5430     0.1995   2.722  0.00650 **
-## GenderMale         0.3785     0.6698   0.565  0.57194   
+## (Intercept)       -5.4781     5.1253  -1.069  0.28515   
+## mean_entitlement  -0.5727     0.5813  -0.985  0.32450   
+## mean_power         0.3909     0.4013   0.974  0.33003   
+## mean_imposition    1.3891     0.4759   2.919  0.00351 **
+## mean_distance      0.5429     0.1995   2.722  0.00649 **
+## GenderMale         0.3784     0.6698   0.565  0.57213   
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -884,9 +882,9 @@ p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
 ##             (Intr) mn_ntt mn_pwr mn_mps mn_dst
 ## men_nttlmnt -0.804                            
 ## mean_power  -0.580  0.046                     
-## mean_impstn -0.781  0.688  0.167              
-## mean_distnc  0.122 -0.498  0.473 -0.450       
-## GenderMale  -0.616  0.218  0.694  0.395  0.178
+## mean_impstn -0.781  0.689  0.167              
+## mean_distnc  0.122 -0.498  0.472 -0.451       
+## GenderMale  -0.617  0.218  0.694  0.395  0.178
 ## convergence code: 0
 ## boundary (singular) fit: see ?isSingular</code></pre>
 </div>
@@ -1094,7 +1092,11 @@ anova(model_reason_full, model_reason_no_entitlement)</code></pre>
                         data = coded_with_norms, 
                         control=glmerControl(optimizer=&quot;bobyqa&quot;),
                         family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
+<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl =
+## control$checkConv, : Model failed to converge with max|grad| = 0.0711847
+## (tol = 0.001, component 1)</code></pre>
+<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl = control$checkConv, : Model is nearly unidentifiable: very large eigenvalue
+##  - Rescale variables?</code></pre>
 <pre class="r"><code>model_reason_no_imposition = glmer(factor(reason_final) ~  mean_power +
                                    mean_entitlement +
                                    mean_distance +
@@ -1104,7 +1106,12 @@ anova(model_reason_full, model_reason_no_entitlement)</code></pre>
                         data = coded_with_norms, 
                         control=glmerControl(optimizer=&quot;bobyqa&quot;),
                         family=binomial)</code></pre>
-<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
+<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl =
+## control$checkConv, : Model failed to converge with max|grad| = 0.141937
+## (tol = 0.001, component 1)</code></pre>
+<pre><code>## Warning in checkConv(attr(opt, &quot;derivs&quot;), opt$par, ctrl = control$checkConv, : Model is nearly unidentifiable: very large eigenvalue
+##  - Rescale variables?;Model is nearly unidentifiable: large eigenvalue ratio
+##  - Rescale variables?</code></pre>
 <pre class="r"><code>model_reason_no_distance = glmer(factor(reason_final) ~  mean_power +
                                    mean_imposition +
                                    mean_entitlement +
@@ -1124,12 +1131,12 @@ anova(model_reason_full, model_reason_no_entitlement)</code></pre>
 ## model_reason_full: factor(reason_final) ~ mean_entitlement + mean_power + mean_imposition + 
 ## model_reason_full:     mean_distance + Gender + (1 + mean_entitlement | subject) + 
 ## model_reason_full:     (1 + mean_entitlement | stimNum)
-##                             Df    AIC    BIC  logLik deviance  Chisq
-## model_reason_no_entitlement 11 515.08 559.34 -246.54   493.08       
-## model_reason_full           12 515.30 563.58 -245.65   491.30 1.7825
-##                             Chi Df Pr(&gt;Chisq)
-## model_reason_no_entitlement                  
-## model_reason_full                1     0.1818</code></pre>
+##                             Df    AIC    BIC  logLik deviance Chisq Chi Df
+## model_reason_no_entitlement 11 515.04 559.30 -246.52   493.04             
+## model_reason_full           12 515.30 563.58 -245.65   491.30 1.741      1
+##                             Pr(&gt;Chisq)
+## model_reason_no_entitlement           
+## model_reason_full                0.187</code></pre>
 <pre class="r"><code>anova(model_reason_full, model_reason_no_power)</code></pre>
 <pre><code>## Data: coded_with_norms
 ## Models:
@@ -1140,11 +1147,11 @@ anova(model_reason_full, model_reason_no_entitlement)</code></pre>
 ## model_reason_full:     mean_distance + Gender + (1 + mean_entitlement | subject) + 
 ## model_reason_full:     (1 + mean_entitlement | stimNum)
 ##                       Df    AIC    BIC  logLik deviance  Chisq Chi Df
-## model_reason_no_power 11 522.74 567.00 -250.37   500.74              
-## model_reason_full     12 515.30 563.58 -245.65   491.30 9.4392      1
+## model_reason_no_power 11 522.76 567.02 -250.38   500.76              
+## model_reason_full     12 515.30 563.58 -245.65   491.30 9.4624      1
 ##                       Pr(&gt;Chisq)   
 ## model_reason_no_power              
-## model_reason_full       0.002124 **
+## model_reason_full       0.002097 **
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre class="r"><code>anova(model_reason_full, model_reason_no_imposition)</code></pre>
@@ -1156,12 +1163,12 @@ anova(model_reason_full, model_reason_no_entitlement)</code></pre>
 ## model_reason_full: factor(reason_final) ~ mean_entitlement + mean_power + mean_imposition + 
 ## model_reason_full:     mean_distance + Gender + (1 + mean_entitlement | subject) + 
 ## model_reason_full:     (1 + mean_entitlement | stimNum)
-##                            Df    AIC    BIC  logLik deviance  Chisq Chi Df
-## model_reason_no_imposition 11 515.91 560.17 -246.96   493.91              
-## model_reason_full          12 515.30 563.58 -245.65   491.30 2.6102      1
+##                            Df    AIC    BIC  logLik deviance Chisq Chi Df
+## model_reason_no_imposition 11 515.95 560.21 -246.97   493.95             
+## model_reason_full          12 515.30 563.58 -245.65   491.30 2.647      1
 ##                            Pr(&gt;Chisq)
 ## model_reason_no_imposition           
-## model_reason_full              0.1062</code></pre>
+## model_reason_full              0.1037</code></pre>
 <pre class="r"><code>anova(model_reason_full, model_reason_no_distance)</code></pre>
 <pre><code>## Data: coded_with_norms
 ## Models:
@@ -1173,10 +1180,10 @@ anova(model_reason_full, model_reason_no_entitlement)</code></pre>
 ## model_reason_full:     (1 + mean_entitlement | stimNum)
 ##                          Df    AIC    BIC  logLik deviance  Chisq Chi Df
 ## model_reason_no_distance 11 516.33 560.59 -247.17   494.33              
-## model_reason_full        12 515.30 563.58 -245.65   491.30 3.0334      1
+## model_reason_full        12 515.30 563.58 -245.65   491.30 3.0336      1
 ##                          Pr(&gt;Chisq)  
 ## model_reason_no_distance             
-## model_reason_full           0.08157 .
+## model_reason_full           0.08156 .
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -1188,7 +1195,7 @@ p3 = anova(model_reason_full, model_reason_no_imposition)$`Pr(&gt;Chisq)`[2]
 p4 = anova(model_reason_full, model_reason_no_distance)$`Pr(&gt;Chisq)`[2]
 
 p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
-<pre><code>## [1] 0.244699902 0.008495946 0.244699902 0.244699902</code></pre>
+<pre><code>## [1] 0.244672925 0.008389222 0.244672925 0.244672925</code></pre>
 <pre class="r"><code>summary(model_reason_full)</code></pre>
 <pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
 ##   Approximation) [glmerMod]
@@ -1211,18 +1218,18 @@ p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
 ##  Groups  Name             Variance  Std.Dev.  Corr 
 ##  subject (Intercept)      2.346e+01 4.843e+00      
 ##          mean_entitlement 5.329e-01 7.300e-01 -0.99
-##  stimNum (Intercept)      1.773e-09 4.211e-05      
-##          mean_entitlement 2.482e-11 4.982e-06 -1.00
+##  stimNum (Intercept)      1.632e-14 1.277e-07      
+##          mean_entitlement 4.614e-15 6.792e-08 -1.00
 ## Number of obs: 413, groups:  subject, 73; stimNum, 6
 ## 
 ## Fixed effects:
 ##                  Estimate Std. Error z value Pr(&gt;|z|)   
-## (Intercept)       -8.7701     4.1191  -2.129  0.03324 * 
-## mean_entitlement   0.5117     0.3881   1.318  0.18737   
-## mean_power         1.0218     0.3317   3.081  0.00207 **
-## mean_imposition    0.5669     0.3559   1.593  0.11114   
+## (Intercept)       -8.7702     4.1198  -2.129  0.03327 * 
+## mean_entitlement   0.5117     0.3882   1.318  0.18743   
+## mean_power         1.0218     0.3317   3.080  0.00207 **
+## mean_imposition    0.5669     0.3559   1.593  0.11117   
 ## mean_distance     -0.2810     0.1531  -1.836  0.06639 . 
-## GenderMale        -0.4505     0.5748  -0.784  0.43322   
+## GenderMale        -0.4505     0.5749  -0.784  0.43327   
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1232,7 +1239,7 @@ p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
 ## mean_power  -0.703  0.334                     
 ## mean_impstn -0.752  0.852  0.142              
 ## mean_distnc  0.098 -0.422  0.386 -0.594       
-## GenderMale  -0.668  0.460  0.581  0.382  0.167
+## GenderMale  -0.668  0.461  0.581  0.382  0.167
 ## convergence code: 0
 ## boundary (singular) fit: see ?isSingular</code></pre>
 </div>
@@ -1358,7 +1365,7 @@ p3 = anova(model_repay_full, model_repay_no_imposition)$`Pr(&gt;Chisq)`[2]
 p4 = anova(model_repay_full, model_repay_no_distance)$`Pr(&gt;Chisq)`[2]
 
 p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
-<pre><code>## [1] 0.62503394 0.69652112 0.01118054 0.08779033</code></pre>
+<pre><code>## [1] 0.62503395 0.69652111 0.01118054 0.08779033</code></pre>
 <pre class="r"><code>summary(model_repay_full)</code></pre>
 <pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
 ##   Approximation) [glmerMod]
@@ -1378,20 +1385,20 @@ p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
 ## -0.6673 -0.2068 -0.0252 -0.0046  4.8352 
 ## 
 ## Random effects:
-##  Groups  Name             Variance  Std.Dev.  Corr 
-##  subject (Intercept)      1.355e+00 1.164e+00      
-##  stimNum (Intercept)      3.347e-16 1.830e-08      
-##          mean_entitlement 4.382e-17 6.620e-09 -1.00
+##  Groups  Name             Variance  Std.Dev.  Corr
+##  subject (Intercept)      1.355e+00 1.164e+00     
+##  stimNum (Intercept)      0.000e+00 0.000e+00     
+##          mean_entitlement 3.352e-18 1.831e-09  NaN
 ## Number of obs: 413, groups:  subject, 73; stimNum, 6
 ## 
 ## Fixed effects:
 ##                  Estimate Std. Error z value Pr(&gt;|z|)   
-## (Intercept)      -25.6409     9.4814  -2.704  0.00684 **
-## mean_entitlement   0.6171     0.5844   1.056  0.29104   
-## mean_power        -0.7842     2.3315  -0.336  0.73661   
-## mean_imposition    3.8178     1.2678   3.011  0.00260 **
-## mean_distance      1.1742     0.8360   1.405  0.16014   
-## GenderMale        -0.7809     0.8941  -0.873  0.38245   
+## (Intercept)      -25.6409     9.4874  -2.703  0.00688 **
+## mean_entitlement   0.6171     0.5846   1.055  0.29123   
+## mean_power        -0.7842     2.3325  -0.336  0.73671   
+## mean_imposition    3.8178     1.2677   3.012  0.00260 **
+## mean_distance      1.1742     0.8360   1.405  0.16015   
+## GenderMale        -0.7809     0.8942  -0.873  0.38248   
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
@@ -1400,8 +1407,8 @@ p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
 ## men_nttlmnt -0.759                            
 ## mean_power  -0.575  0.495                     
 ## mean_impstn -0.176  0.088 -0.684              
-## mean_distnc  0.103 -0.442 -0.724  0.678       
-## GenderMale   0.222  0.046 -0.511  0.316  0.357
+## mean_distnc  0.103 -0.443 -0.724  0.678       
+## GenderMale   0.222  0.046 -0.511  0.317  0.357
 ## convergence code: 0
 ## boundary (singular) fit: see ?isSingular</code></pre>
 </div>
@@ -1663,7 +1670,7 @@ p3 = anova(model_formatting_full, model_formatting_no_imposition)$`Pr(&gt;Chisq)
 p4 = anova(model_formatting_full, model_formatting_no_distance)$`Pr(&gt;Chisq)`[2]
 
 p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
-<pre><code>## [1] 9.501690e-02 5.481725e-05 5.481725e-05 1.313540e-01</code></pre>
+<pre><code>## [1] 9.501691e-02 5.481725e-05 5.481725e-05 1.313540e-01</code></pre>
 </div>
 <div id="use-multinomial-regression-to-extract-weights-1" class="section level3">
 <h3>Use multinomial regression to extract weights</h3>
@@ -1694,7 +1701,7 @@ summary(model_formatting_full)</code></pre>
 ## 
 ## Coefficients:
 ##    (Intercept) mean_entitlement mean_power mean_imposition mean_distance
-## IS   -1.127722       -2.1294771 -1.4298081       -9.555490     8.1272175
+## IS   -1.127722       -2.1294771 -1.4298081       -9.555490     8.1272176
 ## M     2.715390       -0.1476508 -0.8884639        1.280791    -0.4810440
 ## EM   -6.900684        0.4128464 -0.9058033        2.397555    -0.3084523
 ##    GenderMale
@@ -1716,9 +1723,9 @@ summary(model_formatting_full)</code></pre>
 ## AIC: 761.9956</code></pre>
 <pre class="r"><code>p</code></pre>
 <pre><code>##    (Intercept) mean_entitlement mean_power mean_imposition mean_distance
-## IS  0.00000000     0.0008118474 0.02592977    0.000000e+00  0.000000e+00
-## M   0.13339770     0.5926620246 0.01060319    6.987474e-06  9.925014e-06
-## EM  0.09021632     0.4200478720 0.35658769    5.354578e-05  1.532169e-01
+## IS  0.00000000     0.0008118472 0.02592977    0.000000e+00  0.000000e+00
+## M   0.13339770     0.5926620206 0.01060319    6.987474e-06  9.925014e-06
+## EM  0.09021632     0.4200478730 0.35658769    5.354579e-05  1.532169e-01
 ##    GenderMale
 ## IS  0.5212477
 ## M   0.2826494
@@ -1938,28 +1945,28 @@ p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
 ## Random effects:
 ##  Groups  Name             Variance Std.Dev. Corr 
 ##  subject (Intercept)        2.815   1.678        
-##  stimNum (Intercept)      374.930  19.363        
+##  stimNum (Intercept)      374.925  19.363        
 ##          mean_entitlement  12.588   3.548   -1.00
 ## Number of obs: 427, groups:  subject, 72; stimNum, 6
 ## 
 ## Fixed effects:
 ##                  Estimate Std. Error z value Pr(&gt;|z|)   
-## (Intercept)      -33.1342    10.2202  -3.242  0.00119 **
-## mean_entitlement   0.9676     1.7695   0.547  0.58450   
-## mean_power         3.3391     1.0181   3.280  0.00104 **
-## mean_imposition    2.9002     1.1048   2.625  0.00866 **
-## mean_distance      0.2033     0.2624   0.775  0.43860   
-## GenderMale         0.4243     0.5333   0.796  0.42625   
+## (Intercept)      -33.1340    10.1925  -3.251  0.00115 **
+## mean_entitlement   0.9676     1.7660   0.548  0.58376   
+## mean_power         3.3390     1.0175   3.282  0.00103 **
+## mean_imposition    2.9002     1.1034   2.628  0.00858 **
+## mean_distance      0.2033     0.2621   0.775  0.43812   
+## GenderMale         0.4243     0.5333   0.796  0.42620   
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Correlation of Fixed Effects:
 ##             (Intr) mn_ntt mn_pwr mn_mps mn_dst
 ## men_nttlmnt -0.854                            
-## mean_power  -0.028 -0.410                     
-## mean_impstn -0.477  0.282 -0.230              
-## mean_distnc  0.025  0.207 -0.278 -0.435       
-## GenderMale  -0.160  0.047  0.043  0.183 -0.081
+## mean_power  -0.027 -0.411                     
+## mean_impstn -0.476  0.281 -0.232              
+## mean_distnc  0.024  0.207 -0.277 -0.434       
+## GenderMale  -0.160  0.047  0.043  0.182 -0.080
 ## convergence code: 0
 ## boundary (singular) fit: see ?isSingular</code></pre>
 </div>
@@ -2085,7 +2092,7 @@ p3 = anova(model_repay_full, model_repay_no_imposition)$`Pr(&gt;Chisq)`[2]
 p4 = anova(model_repay_full, model_repay_no_distance)$`Pr(&gt;Chisq)`[2]
 
 p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
-<pre><code>## [1] 0.739274049 0.448846980 0.064323772 0.008919651</code></pre>
+<pre><code>## [1] 0.739274046 0.448846981 0.064323772 0.008919652</code></pre>
 <pre class="r"><code>summary(model_repay_full)</code></pre>
 <pre><code>## Generalized linear mixed model fit by maximum likelihood (Laplace
 ##   Approximation) [glmerMod]
@@ -2102,33 +2109,33 @@ p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
 ## 
 ## Scaled residuals: 
 ##     Min      1Q  Median      3Q     Max 
-## -0.5621 -0.1148 -0.0854 -0.0308 10.4490 
+## -0.5621 -0.1148 -0.0854 -0.0308 10.4491 
 ## 
 ## Random effects:
-##  Groups  Name             Variance  Std.Dev.  Corr
-##  subject (Intercept)      0.000e+00 0.000e+00     
-##  stimNum (Intercept)      0.000e+00 0.000e+00     
-##          mean_entitlement 7.977e-16 2.824e-08  NaN
+##  Groups  Name             Variance Std.Dev.  Corr 
+##  subject (Intercept)      0.00e+00 0.000e+00      
+##  stimNum (Intercept)      1.45e-08 1.204e-04      
+##          mean_entitlement 7.28e-10 2.698e-05 -1.00
 ## Number of obs: 427, groups:  subject, 72; stimNum, 6
 ## 
 ## Fixed effects:
 ##                  Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)        5.9172    12.0453   0.491 0.623252    
-## mean_entitlement  -0.5687     1.6458  -0.346 0.729667    
-## mean_power        -2.5088     2.2232  -1.128 0.259124    
-## mean_imposition    3.1939     1.7468   1.828 0.067486 .  
-## mean_distance     -1.7855     0.5100  -3.501 0.000464 ***
-## GenderMale        -0.5676     0.6330  -0.897 0.369921    
+## (Intercept)        5.9172    12.1063   0.489 0.625008    
+## mean_entitlement  -0.5687     1.6501  -0.345 0.730353    
+## mean_power        -2.5088     2.2246  -1.128 0.259426    
+## mean_imposition    3.1939     1.7472   1.828 0.067552 .  
+## mean_distance     -1.7855     0.5103  -3.499 0.000467 ***
+## GenderMale        -0.5676     0.6331  -0.897 0.369938    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Correlation of Fixed Effects:
 ##             (Intr) mn_ntt mn_pwr mn_mps mn_dst
-## men_nttlmnt -0.735                            
-## mean_power  -0.343 -0.367                     
-## mean_impstn -0.247  0.752 -0.784              
-## mean_distnc -0.327 -0.075  0.661 -0.651       
-## GenderMale  -0.095 -0.001  0.095 -0.030 -0.031
+## men_nttlmnt -0.737                            
+## mean_power  -0.344 -0.363                     
+## mean_impstn -0.249  0.751 -0.783              
+## mean_distnc -0.329 -0.072  0.661 -0.650       
+## GenderMale  -0.096 -0.001  0.095 -0.029 -0.031
 ## convergence code: 0
 ## boundary (singular) fit: see ?isSingular</code></pre>
 </div>
@@ -2299,7 +2306,7 @@ mean(df_rt$total_minutes)</code></pre>
 ## model_full_all_norms   12 635.02 688.69 -305.51   611.02 0.0228      1
 ##                        Pr(&gt;Chisq)
 ## model_full_no_distance           
-## model_full_all_norms       0.8799</code></pre>
+## model_full_all_norms         0.88</code></pre>
 <div id="adjust-for-multiple-comparisons-6" class="section level3">
 <h3>Adjust for multiple comparisons</h3>
 <pre class="r"><code>p1 = anova(model_full_all_norms, model_full_no_entitlement)$`Pr(&gt;Chisq)`[2]
@@ -2308,7 +2315,7 @@ p3 = anova(model_full_all_norms, model_full_no_imposition)$`Pr(&gt;Chisq)`[2]
 p4 = anova(model_full_all_norms, model_full_no_distance)$`Pr(&gt;Chisq)`[2]
 
 p.adjust(c(p1, p2, p3, p4), method=&quot;holm&quot;)</code></pre>
-<pre><code>## [1] 0.002080335 0.420812191 0.541638145 0.879948609</code></pre>
+<pre><code>## [1] 0.002080336 0.420812604 0.541638355 0.879950759</code></pre>
 </div>
 <div id="use-multinomial-regression-to-extract-weights-2" class="section level3">
 <h3>Use multinomial regression to extract weights</h3>
@@ -2372,7 +2379,7 @@ summary(model_formatting_full)</code></pre>
 ##    (Intercept) mean_entitlement mean_power mean_imposition mean_distance
 ## EM    4.615889       -0.9839694 -0.1058313      0.07535172    0.28819686
 ## IS    4.475651       -0.8158763 -0.1728745      0.20450522   -0.16632377
-## M     4.033373       -0.4214625 -0.6666837      0.43085412    0.08357233
+## M     4.033373       -0.4214625 -0.6666837      0.43085412    0.08357232
 ##    GenderMale
 ## EM -0.1562263
 ## IS -0.2315888
@@ -2392,8 +2399,8 @@ summary(model_formatting_full)</code></pre>
 ## AIC: 1647.436</code></pre>
 <pre class="r"><code>p</code></pre>
 <pre><code>##    (Intercept) mean_entitlement  mean_power mean_imposition mean_distance
-## EM  0.01664632     3.291107e-06 0.629272193      0.69901224   0.002606866
-## IS  0.07914444     4.503180e-03 0.521877614      0.44755002   0.219200569
+## EM  0.01664632     3.291107e-06 0.629272192      0.69901224   0.002606866
+## IS  0.07914444     4.503180e-03 0.521877615      0.44755002   0.219200569
 ## M   0.03062176     4.659951e-02 0.001839379      0.02933164   0.383036631
 ##    GenderMale
 ## EM  0.5060314

@@ -14,10 +14,7 @@ library(Hmisc)
 library(lmerTest)
 library(nnet)
 library(broom)
-```
 
-
-```{r}
 # setwd("/Users/seantrott/Dropbox/UCSD/Research/IndirectSpeechActs/Entitlement/entitlement_data_analysis/analysis")
 ```
 
@@ -231,18 +228,36 @@ range(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
 
 ```{r}
 model_full = glmer(data = coded_with_norms,
-                  formatting ~ condition + Gender+
+                  formatting ~ condition + Gender +
                     (1 + condition | subject) + (1 + condition | stimNum),
                         control=glmerControl(optimizer="bobyqa"),
                         family=binomial)
 
 model_reduced = glmer(data = coded_with_norms,
-                  formatting ~ Gender+
+                  formatting ~ Gender +
                     (1 + condition | subject) + (1 + condition | stimNum),
                         control=glmerControl(optimizer="bobyqa"),
                         family=binomial)
 
 anova(model_full, model_reduced)
+
+```
+
+
+### Use multinomial regression to extract weights
+
+```{r}
+model_formatting_full = multinom(formatting ~ condition +
+                              Gender,
+                        data = coded_with_norms)
+
+z <- summary(model_formatting_full)$coefficients/summary(model_formatting_full)$standard.errors
+# 2-tailed Wald z tests to test significance of coefficients
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+
+summary(model_formatting_full)
+p
+
 
 ```
 
@@ -256,7 +271,7 @@ model_formatting_full = glmer(formatting ~ mean_entitlement +
                               mean_power +
                               mean_imposition +
                               mean_distance +
-                              Gender + 
+                              Gender +
                           (1 + mean_entitlement | subject) +
                           (1 | stimNum),
                         data = coded_with_norms, 
@@ -682,7 +697,7 @@ preface_kappa
 
 ```{r}
 model_full = glmer(data = coded_with_norms,
-                  formatting ~ condition + Gender+
+                  formatting ~ condition + Gender +
                     (1 + condition | subject) + (1 + condition | stimNum),
                         control=glmerControl(optimizer="bobyqa"),
                         family=binomial)
@@ -696,6 +711,26 @@ model_reduced = glmer(data = coded_with_norms,
 anova(model_full, model_reduced)
 
 ```
+
+
+
+### Use multinomial regression to extract weights
+
+```{r}
+model_formatting_full = multinom(formatting ~ condition +
+                              Gender,
+                        data = coded_with_norms)
+
+z <- summary(model_formatting_full)$coefficients/summary(model_formatting_full)$standard.errors
+# 2-tailed Wald z tests to test significance of coefficients
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+
+summary(model_formatting_full)
+p
+
+
+```
+
 
 
 
@@ -1048,6 +1083,24 @@ anova(model_full, model_reduced)
 
 ```
 
+### Use multinomial regression to extract weights
+
+```{r}
+model_formatting_full = multinom(formatting ~ condition +
+                              Gender,
+                        data = coded_with_norms)
+
+z <- summary(model_formatting_full)$coefficients/summary(model_formatting_full)$standard.errors
+# 2-tailed Wald z tests to test significance of coefficients
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+
+summary(model_formatting_full)
+p
+
+
+```
+
+
 
 ## Formatting ~ Entitlement Norms
 
@@ -1216,7 +1269,29 @@ model_no_interaction = lmer(judgment ~ formatting + entitlement_reordered +
                            control=lmerControl(optimizer="bobyqa"),
                            REML=FALSE)
 
+model_no_formatting = lmer(judgment ~ entitlement_reordered + 
+                              Gender +
+                             (1+condition| subject) + 
+                              (1 + condition | stimNum) +
+                             (1 + condition | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+model_no_entitlement = lmer(judgment ~ formatting + 
+                              Gender +
+                             (1+condition| subject) + 
+                              (1 + condition | stimNum) +
+                             (1 + condition | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+summary(model_full_all)
 anova(model_full_all, model_no_interaction)
+anova(model_no_interaction, model_no_formatting)
+anova(model_no_interaction, model_no_entitlement)
+
 ```
 
 
