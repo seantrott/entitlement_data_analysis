@@ -176,24 +176,24 @@ $(document).ready(function () {
 <div id="norm-information" class="section level1">
 <h1>Norm information</h1>
 <pre class="r"><code>df_normed = read_csv(&quot;../data/norming_data.csv&quot;)</code></pre>
-<pre><code>## Warning: Missing column names filled in: 'X1' [1]</code></pre>
-<pre><code>## Warning: Duplicated column names deduplicated: 'X1' =&gt; 'X1_1' [2]</code></pre>
 <pre><code>## Parsed with column specification:
 ## cols(
-##   .default = col_integer(),
-##   url = col_character(),
+##   rt = col_integer(),
 ##   trial_type = col_character(),
-##   internal_node_id = col_character(),
+##   trial_index = col_integer(),
+##   subject = col_integer(),
 ##   group = col_character(),
-##   view_history = col_character(),
-##   responses = col_character(),
 ##   stimType = col_character(),
+##   stimNum = col_integer(),
 ##   type = col_character(),
+##   power_norm = col_integer(),
+##   distance_norm = col_integer(),
+##   imposition_norm = col_integer(),
+##   entitlement_norm = col_integer(),
 ##   Gender = col_character(),
 ##   Native_Speaker = col_character(),
 ##   Age = col_character()
 ## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
 <pre class="r"><code>df_normed$Age = as.integer(df_normed$Age)</code></pre>
 <pre><code>## Warning: NAs introduced by coercion</code></pre>
 <pre class="r"><code>df_normed$condition = factor(df_normed$stimType)
@@ -546,19 +546,14 @@ summary(m1_distance)</code></pre>
 <div id="experiment-1" class="section level1">
 <h1>Experiment 1</h1>
 <pre class="r"><code>coded_with_norms = read_csv(&quot;../data/exp1_critical.csv&quot;)</code></pre>
-<pre><code>## Warning: Missing column names filled in: 'X1' [1]</code></pre>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   .default = col_character(),
-##   X1 = col_integer(),
 ##   stimNum = col_integer(),
 ##   rt = col_integer(),
 ##   trial_index = col_integer(),
-##   time_elapsed = col_integer(),
 ##   subject = col_integer(),
-##   surveyCode = col_integer(),
 ##   Age = col_integer(),
-##   Reason.JV = col_integer(),
 ##   mean_entitlement = col_double(),
 ##   sd_entitlement = col_double(),
 ##   mean_imposition = col_double(),

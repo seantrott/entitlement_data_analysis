@@ -14,6 +14,7 @@ library(Hmisc)
 library(lmerTest)
 library(nnet)
 library(broom)
+library(gridExtra)
 
 # setwd("/Users/seantrott/Dropbox/UCSD/Research/IndirectSpeechActs/Entitlement/entitlement_data_analysis/analysis")
 ```
@@ -167,6 +168,13 @@ range(distinct(coded_with_norms, subject, Age)$Age, na.rm=TRUE)
 ```{r}
 model_full = glmer(data = coded_with_norms,
                   formatting ~ condition + Gender +
+                    (1 | subject) + (1 | stimNum),
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+
+model_full = glmer(data = coded_with_norms,
+                  formatting ~ condition + Gender +
                     (1 + condition | subject) + (1 + condition | stimNum),
                         control=glmerControl(optimizer="bobyqa"),
                         family=binomial)
@@ -178,6 +186,15 @@ model_reduced = glmer(data = coded_with_norms,
                         family=binomial)
 
 anova(model_full, model_reduced)
+
+model_gender_interaction = glmer(data = coded_with_norms,
+                  formatting ~ condition * Gender +
+                    (1 + condition | subject) + (1 + condition | stimNum),
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+anova(model_full, model_gender_interaction)
+
 
 ```
 
@@ -195,6 +212,44 @@ p <- (1 - pnorm(abs(z), 0, 1)) * 2
 
 summary(model_formatting_full)
 p
+
+
+```
+
+
+### Visualization
+
+
+```{r}
+### Code for making stacked bar chart
+s = as.data.frame(table(coded_with_norms$condition, coded_with_norms$formatting))
+s = filter(s, Var1 != "filler")
+
+low = filter(s, Var1 == "low")
+low$proportion = low$Freq/sum(low$Freq)
+high = filter(s, Var1 == "high")
+high$proportion = high$Freq/sum(high$Freq)
+
+new.prop = rbind(low, high)
+
+new.prop$Var2 = factor(new.prop$Var2, levels = c("D", "M", "EM", "IS"))
+new.prop$Var2 = new.prop$Var2 %>%
+  fct_recode("Direct" = "D",
+             "Modal" = "M",
+             "Embedded Modal" = "EM",
+             "Indirect Statement" = "IS")
+
+exp1 = ggplot(data=new.prop, aes(x=Var1, y=proportion, fill=Var2, label = round(proportion, 2))) +
+  geom_bar(stat="identity") +
+  geom_text(size = 3, position = position_stack(vjust = 0.5)) +
+  theme_minimal() +
+  xlab("Entitlement") +
+  guides(fill=guide_legend(title="Formatting")) +
+  ggtitle("Formatting rates across conditions (Experiment 1)") +
+  ylab("Proportion of requests") 
+
+# ggsave("Figures/s1_exp2_stacked.tiff", units="in", width=4, height=4, dpi=300, compression = 'lzw')
+
 
 
 ```
@@ -347,6 +402,15 @@ model_reduced = glmer(data = coded_with_norms,
 
 anova(model_full, model_reduced)
 
+model_gender_interaction = glmer(data = coded_with_norms,
+                  formatting ~ condition * Gender +
+                    (1 + condition | subject) + (1 + condition | stimNum),
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+anova(model_gender_interaction, model_full)
+
+
 ```
 
 
@@ -364,6 +428,48 @@ p <- (1 - pnorm(abs(z), 0, 1)) * 2
 
 summary(model_formatting_full)
 p
+
+
+```
+
+
+
+
+### Visualization
+
+
+```{r}
+### Code for making stacked bar chart
+s = as.data.frame(table(coded_with_norms$condition, coded_with_norms$formatting))
+s = filter(s, Var1 != "filler")
+
+low = filter(s, Var1 == "low")
+low$proportion = low$Freq/sum(low$Freq)
+high = filter(s, Var1 == "high")
+high$proportion = high$Freq/sum(high$Freq)
+
+new.prop = rbind(low, high)
+
+new.prop$Var2 = factor(new.prop$Var2, levels = c("D", "M", "EM", "IS"))
+new.prop$Var2 = new.prop$Var2 %>%
+  fct_recode("Direct" = "D",
+             "Modal" = "M",
+             "Embedded Modal" = "EM",
+             "Indirect Statement" = "IS")
+
+exp1b = ggplot(data=new.prop, aes(x=Var1, y=proportion, fill=Var2, label = round(proportion, 2))) +
+  geom_bar(stat="identity") +
+  geom_text(size = 3, position = position_stack(vjust = 0.5)) +
+  theme_minimal() +
+  xlab("Entitlement") +
+  guides(fill=guide_legend(title="Formatting")) +
+  ggtitle("Formatting rates across conditions (Experiment 1b)") +
+  ylab("Proportion of requests") 
+
+g <- arrangeGrob(exp1, exp1b, ncol=1) #generates g
+ggsave(g, file="Figures/s1_both_1_1b.tiff", units="in",dpi=300, compression = 'lzw')
+ 
+
 
 
 ```
@@ -509,6 +615,16 @@ model_reduced = glmer(data = coded_with_norms,
 
 anova(model_full, model_reduced)
 
+model_gender_interaction = glmer(data = coded_with_norms,
+                  formatting ~ condition * Gender+
+                    (1 + condition | subject) + (1 + condition | stimNum),
+                        control=glmerControl(optimizer="bobyqa"),
+                        family=binomial)
+
+anova(model_gender_interaction, model_full)
+
+
+
 ```
 
 ### Use multinomial regression to extract weights
@@ -524,6 +640,57 @@ p <- (1 - pnorm(abs(z), 0, 1)) * 2
 
 summary(model_formatting_full)
 p
+
+
+```
+
+
+### Visualization
+
+
+```{r}
+### Code for making stacked bar chart
+s = as.data.frame(table(coded_with_norms$condition, coded_with_norms$formatting))
+s = filter(s, Var1 != "filler")
+
+low = filter(s, Var1 == "low")
+low$proportion = low$Freq/sum(low$Freq)
+high = filter(s, Var1 == "high")
+high$proportion = high$Freq/sum(high$Freq)
+
+new.prop = rbind(low, high)
+
+new.prop$Var2 = factor(new.prop$Var2, levels = c("D", "M", "EM", "IS"))
+new.prop$Var2 = new.prop$Var2 %>%
+  fct_recode("Direct" = "D",
+             "Modal" = "M",
+             "Embedded Modal" = "EM",
+             "Indirect Statement" = "IS")
+
+ggplot(data=new.prop, aes(x=Var1, y=proportion, fill=Var2, label = round(proportion, 2))) +
+  geom_bar(stat="identity", position="dodge") +
+  geom_text(aes(label=round(proportion, 2)), 
+            position=position_dodge(width=0.9),
+            vjust=-0.25, size = 3) +
+  theme_minimal() +
+  xlab("Entitlement") +
+  guides(fill=guide_legend(title="Formatting")) +
+  ggtitle("Formatting rates across conditions") +
+  ylab("Proportion of requests")
+
+ggsave("Figures/fig1_exp2.tiff", units="in", width=5, height=4, dpi=300, compression = 'lzw')
+
+ggplot(data=new.prop, aes(x=Var1, y=proportion, fill=Var2, label = round(proportion, 2))) +
+  geom_bar(stat="identity") +
+  geom_text(size = 3, position = position_stack(vjust = 0.5)) +
+  theme_minimal() +
+  xlab("Entitlement") +
+  guides(fill=guide_legend(title="Formatting")) +
+  ggtitle("Formatting rates across conditions") +
+  ylab("Proportion of requests") 
+
+ggsave("Figures/s1_exp2_stacked.tiff", units="in", width=4, height=4, dpi=300, compression = 'lzw')
+
 
 
 ```
@@ -720,6 +887,28 @@ anova(model_full_all, model_no_interaction)
 anova(model_no_interaction, model_no_formatting)
 anova(model_no_interaction, model_no_entitlement)
 
+
+
+model_gender_two_way= lmer(judgment ~ format_reordered*entitlement_reordered + 
+                             Gender*format_reordered +
+                             Gender*entitlement_reordered+
+                             (1+condition| subject) + 
+                              (1 + condition | stimNum) +
+                             (1 + condition | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+model_gender_interaction = lmer(judgment ~ format_reordered*entitlement_reordered * Gender + 
+                             (1+condition| subject) + 
+                              (1 + condition | stimNum) +
+                             (1 + condition | group),
+                           data = coded_with_norms,
+                           control=lmerControl(optimizer="bobyqa"),
+                           REML=FALSE)
+
+anova(model_gender_interaction, model_gender_two_way)
+
 ```
 
 
@@ -769,6 +958,26 @@ model_no_entitlement = lmer(judgment ~ format_reordered*mean_power +
 
 anova(model_full_all_norms, model_no_entitlement_interaction)
 anova(model_no_entitlement_interaction, model_no_entitlement)
+
+```
+
+
+### Visualizations
+
+```{r}
+coded_with_norms$formatting = fct_recode(factor(coded_with_norms$formatting), "embedded modal" = "wonder")
+
+coded_with_norms$formatting = factor(coded_with_norms$formatting,
+                                     levels = c("direct", "modal", "embedded modal", "indirect"))
+
+ggplot(data=coded_with_norms, aes(x=judgment, fill=condition)) +
+  geom_density(alpha=.4) +
+  ggtitle("Appropriateness by formatting") +
+  xlab("Appropriateness judgments (centered)") +
+  theme_minimal() +
+  facet_grid(~formatting)
+
+ggsave("Figures/fig2_exp3.tiff", units="in", width=6, height=4, dpi=300, compression = 'lzw')
 
 ```
 
